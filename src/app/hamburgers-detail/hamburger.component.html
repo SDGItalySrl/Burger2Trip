@@ -1,0 +1,55 @@
+<div class="container-products container">
+        <div class="row">
+            <div class="col-md-8">
+                <h5>Menu</h5>
+                <div class="jumbotron product-menu">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 card" *ngFor="let hamburger of hamburgers" >
+                                <div class="card-body">
+                                    <div class="product-title">
+                                        <h5>{{hamburger.nome}}</h5>
+                                    </div>
+                                    <p *ngIf="hamburger?.ingredienti">{{hamburger.ingredienti}}</p>
+                                    <p *ngIf="hamburger?.ingredienti == ''">&nbsp;</p>
+                                    <p *ngIf="hamburger?.ingredienti == ''">&nbsp;</p>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4">
+                                            <h6>Singolo</h6>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <p>{{hamburger.prezzo_singolo}}</p>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <button class="btn">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4">
+                                            <h6>Menu</h6>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4">
+                                            <p>{{hamburger.prezzo_menu}}</p>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <button class="btn" (click)="openOptionsDialog()">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <orders-container></orders-container>
+            </div>
+        </div>
+    </div>
+    
+        

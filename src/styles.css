@@ -1,0 +1,63 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+
+html, body{
+    min-height: 100%;
+    height: 100%;
+    margin: 0%
+}
+body{background-color:#344955 !important}
+.spacer{
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+
+@media(min-width: 576px){
+    .alergy-alert hr{
+        display: none;
+    }
+}
+
+@media(max-width: 576px){
+    .menu .card{ margin: 0 1rem 0 1rem;}
+}
+
+@media(min-width:1025px){
+    .descrizione{
+        display: none;
+    }
+}
+
+.alergy-alert hr{border-top-color:white;}
+#list-nav-bar .nav-link.active{color: #F9AA33;}
+#menu-navbar{background-color: #344955 !important;}
+#menu-navbar .nav-link{color:white;}
+.container .jumbotron{
+    background-color: #4A6572;
+    color:white;
+}
+.nav-item{padding: 0 5px 0 5px;}
+.menu-descrizione{color:black}
+.menu-descrizione button{text-align: right;background-color: #4A6572;color: white;}
+.menu-descrizione button:hover{background-color: #b2c4cd}
+.container h5{color:white}
+.main-router-outlet{padding: 1rem 0 1rem 0;}
+.imgContainer {position: relative;}
+.image {opacity: 1;display: block;width: 100%;height: auto;transition: .5s ease;backface-visibility: hidden;}
+.middle {transition: .5s ease;opacity: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);text-align: center;}
+.imgContainer:hover .image {opacity: 0.3; cursor: pointer;}
+.imgContainer:hover .middle {opacity: 1; cursor: pointer;} 
+.text {font-size: 22px; color:white}
+.descrizione h6{text-align: center}
+.descrizione{width: 100%; color:white}
+.menu .card{border:0;background-color: #4A6572;}
+.product-title h6{font-weight: bold;}
+.container-products .jumbotron{background-color:#E8E8E8}
+.card, .container-products h5, .orders p{color:black;}
+.orders .fa{color:#F9AA33}
+.orders-icon-container{text-align: center}
+.example-container {display: flex; flex-direction: column;}  
+.example-container > * {width: 100%;}

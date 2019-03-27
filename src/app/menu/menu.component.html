@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h5>Menu</h5>
+            <div class="jumbotron menu">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 card menu-card" *ngFor="let menu of menu">
+                        <div class="card-body row  menu-descrizione imgContainer">
+                                <img mat-card-img [src]="menu.img_path" class="image"
+                                [routerLink]="menu.path_url" >
+                                <div class="middle">
+                                    <div class="text" [routerLink]="menu.path_url">{{menu.descrizione}}</div>
+                                </div>
+                                <div class="descrizione">
+                                    <h6 class="mt-2">{{menu.descrizione}}</h6>
+                                </div>
+                                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <orders-container></orders-container>
+        </div>
+
+    </div>
+</div>
+
+    
