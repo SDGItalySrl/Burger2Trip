@@ -7,3 +7,6 @@ export * from '@angular/material/icon';
 export * from '@angular/material/tabs';
 export * from '@angular/material/grid-list';
 export * from '@angular/material/card';
+export * from '@angular/material/radio';
+export * from '@angular/material/list';
+export * from '@angular/material/badge';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { HamburgerService } from './hamburger.service';
+import { HamburgerService } from '../shared/hamburger.service';
 import { map } from 'rxjs/operators';
 
 @Injectable()

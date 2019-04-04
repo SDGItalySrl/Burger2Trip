@@ -35,7 +35,7 @@ export class MenuComponent{
           descrizione: "Bevande",
           categoria: "n",
           img_path: "../assets/images/preparaHam1.jpg",
-          path_url: "bevande details",
+          path_url: "bevande-details",
           priorita: "3",
           prezzo: "10.00"
         }     

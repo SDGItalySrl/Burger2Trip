@@ -56,8 +56,19 @@ body{background-color:#344955 !important}
 .menu .card{border:0;background-color: #4A6572;}
 .product-title h6{font-weight: bold;}
 .container-products .jumbotron{background-color:#E8E8E8}
-.card, .container-products h5, .orders p{color:black;}
+.card, .container-products h5, .orders p{color:#535353;}
 .orders .fa{color:#F9AA33}
 .orders-icon-container{text-align: center}
 .example-container {display: flex; flex-direction: column;}  
 .example-container > * {width: 100%;}
+.product-menu .btn{padding: 0%;vertical-align: unset;}
+#toast-container *{background-color: green}
+.product-menu .fa{ color:#535353}
+.radio-group{display:flex; flex-direction:column;margin:5px 15px;}
+.radio-button{margin:5px;}
+#crea-hamburger-label{margin-top:10px; font-weight: bold;}
+.quantita{margin: 5px 2% 5px 5px;}
+.mat-badge-medium.mat-badge-after .mat-badge-content{right:-24px}
+.mat-badge-medium.mat-badge-before .mat-badge-content{left:5px}
+.mat-badge-medium.mat-badge-above .mat-badge-content{top:0}
+.mat-badge-medium .mat-badge-content{width:19px; height:18px;line-height: 20px;}

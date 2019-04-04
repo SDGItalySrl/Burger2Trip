@@ -1,36 +1,39 @@
-<h2 mat-dialog-title>Seleziona le opzioni</h2>
+<h2 mat-dialog-title>{{titoloDialog}}</h2>
+<form [formGroup]="opzioniForm" (ngSubmit)="salvaProdotto()">
 <mat-dialog-content>
-    <div class="example-container">
-            <mat-form-field>
-                <mat-select placeholder="Bibita">
-                <mat-option value="option">Coca Cola 33cl - In vetro</mat-option>
-                <mat-option value="option">Fanta 33cl - In vetro</mat-option>
-                <mat-option value="option">Sprite 33cl - In vetro</mat-option>
-                <mat-option value="option">Coca Cola Zero 33cl - In vetro</mat-option>
+<div class="example-container">   
+        <mat-form-field>
+                <mat-select formControlName="tipoCottura" id="tipoCottura" placeholder="Tipo cottura" > 
+                        <mat-option value="Al Sangue">Al Sangue</mat-option>
+                        <mat-option value="Ben Cotto">Ben cotto</mat-option>
+                        <mat-option value="Medio">Medio</mat-option>
                 </mat-select>
-            </mat-form-field>
-            
-            <mat-form-field>
-                    <mat-select placeholder="Tipo cottura">
-                    <mat-option value="option">Al Sangue</mat-option>
-                    <mat-option value="option">Ben cotto</mat-option>
-                    <mat-option value="option">Medio</mat-option>
-                    </mat-select>
-            </mat-form-field>
-            
-            <mat-form-field>
-                    <mat-select placeholder="Opzione">
-                    <mat-option value="option">Doppio Hamburger</mat-option>
-                    <mat-option value="option">Normale</mat-option>
-                    </mat-select>
-            </mat-form-field>
-    </div>
+        </mat-form-field>
+        
+        <mat-form-field >
+                <mat-select formControlName="opzione" id="opzione" placeholder="Opzione" >
+                        <mat-option value="Doppio Hamburger">Doppio Hamburger</mat-option>
+                        <mat-option value="Normale">Normale</mat-option>
+                </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field>
+                <mat-select formControlName="bibita" id="bibita" placeholder="Bibita" required>
+                        <mat-option value="Coca Cola 33cl">Coca Cola 33cl - In vetro</mat-option>
+                        <mat-option value="Fanta 33cl">Fanta 33cl - In vetro</mat-option>
+                        <mat-option value="Sprite 33cl">Sprite 33cl - In vetro</mat-option>
+                        <mat-option value="Coca Cola Zero">Coca Cola Zero 33cl - In vetro</mat-option>
+                </mat-select>
+                <mat-error *ngIf="bibita.hasError('required')">Required</mat-error>
+        </mat-form-field>
+</div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button color="basic">
-            <i class="fa fa-floppy-o"></i> Save
-    </button>
-    <button mat-button color="basic" >
-         <i class="fa fa-times"></i> Cancel
-    </button>
+        <button mat-button color="basic" type="submit" >
+                <i class="fa fa-floppy-o"></i> Save
+        </button>
+        <button mat-button (click)="chiudi()" color="basic" type="button">
+                <i class="fa fa-times"></i> Cancel
+        </button>     
 </mat-dialog-actions>
+</form>   

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HamburgerService } from './hamburger.service';
-import { HamburgerResolver } from './hamburger-resolver.service';
+import { HamburgerService } from '../shared/hamburger.service';
 import { HamburgerOptionsModalComponent } from './hamburger-options-modal/hamburger-options-modals.component';
 import { MatDialog } from '@angular/material';
 
@@ -11,8 +10,7 @@ import { MatDialog } from '@angular/material';
 })
 export class HamburgersDetailComponent{
     hamburgers: any[];
-    constructor(private humburgerList: HamburgerService, 
-                private humburgerResolver: HamburgerResolver,
+    constructor(private hamburgerList: HamburgerService,
                 private route: ActivatedRoute,
                 private dialog: MatDialog){ }
 
@@ -20,14 +18,16 @@ export class HamburgersDetailComponent{
         this.hamburgers = this.route.snapshot.data['hamburgers'];
     }
 
-    openOptionsDialog(): void{
-        let dialogRef = this.dialog.open(HamburgerOptionsModalComponent, {
-            width: '500px'
-        });
-
-        dialogRef.afterClosed().subscribe(result => { 
-            console.log('The dialog was closed ', result);
+    openOptionsDialog( hamburgerId: number, isMenu: boolean): void{
+        const hamburger  = this.hamburgerList.getHamburger(hamburgerId);
+        const dialogRef = this.dialog.open(HamburgerOptionsModalComponent, {
+            width: '500px',
+            data: {
+                objHamburger: hamburger,
+                isMenu: isMenu
+            }
         });
     }
+    
 }
 

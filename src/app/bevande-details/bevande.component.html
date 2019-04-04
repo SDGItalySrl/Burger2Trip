@@ -1,18 +1,36 @@
-<div class="container">
+<div class="container-products container">
         <div class="row">
             <div class="col-md-8">
                 <h5>Menu</h5>
-                <div class="jumbotron menu">
-                    
+                <div class="jumbotron product-menu">
+                    <div class="container">
+                        <div class="row" *ngFor="let bevanda of bevande">
+                            <div class="col-md-12 col-sm-12 card mb-2">                                
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-8 col-sm-8">
+                                            <div class="product-title">
+                                                <h5>{{bevanda.nome}}</h5>
+                                            </div>                                            
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <p>{{bevanda.prezzo | currency: 'EUR':'symbol':'1.2-2'}}</p>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2">
+                                            <button class="btn" (click)="aggiungiProdotto(bevanda)">
+                                                    <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <h5> Sezione ordini</h5>
-                <div class="jumbotron orders">
-                    
-                </div>
+                <orders-container></orders-container>
             </div>
-    
         </div>
     </div>
     

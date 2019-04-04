@@ -19,10 +19,10 @@
                                             <h6>Singolo</h6>
                                         </div>
                                         <div class="col-md-4 col-sm-4">
-                                            <p>{{hamburger.prezzo_singolo}}</p>
+                                            <p>{{hamburger.prezzo_singolo | currency: 'EUR':'symbol':'1.2-2'}}</p>
                                         </div>
                                         <div class="col-md-2 col-sm-2">
-                                            <button class="btn">
+                                            <button class="btn" (click)="openOptionsDialog(hamburger.id, false)">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
@@ -32,10 +32,10 @@
                                             <h6>Menu</h6>
                                         </div>
                                         <div class="col-md-4 col-sm-4">
-                                            <p>{{hamburger.prezzo_menu}}</p>
+                                            <p>{{hamburger.prezzo_menu | currency: 'EUR':'symbol':'1.2-2'}}</p>
                                         </div>
                                         <div class="col-md-2 col-sm-2">
-                                            <button class="btn" (click)="openOptionsDialog()">
+                                            <button class="btn" (click)="openOptionsDialog(hamburger.id, true)">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
