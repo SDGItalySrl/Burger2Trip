@@ -14,7 +14,7 @@ import {
    MatSelectModule,
    MatRadioModule,
    MatListModule,
-   MatBadgeModule
+   MatBadgeModule,
   } from './material';
 import { NavbarComponent} from './nav/nav.component';
 import { AppComponent } from './app.component';

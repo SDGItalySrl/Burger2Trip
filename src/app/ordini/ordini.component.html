@@ -1,7 +1,15 @@
 <h5> Sezione ordini</h5>
-<div class="jumbotron orders">
+<div class="jumbotron orders">    
+        <mat-list>
+            <mat-list-item *ngFor="let ordine of ordineList">
+                <h3 matLine> {{ordine.prodotti.nome}} </h3>
+                <p matLine> {{ordine.prodotti.opzioni.descrizione}} </p>
+                <p matLine class="demo-2"> {{ordine.prodotti.opzioni.ingredienti}} </p>
+            </mat-list-item>
+        </mat-list>
     <hr>
-    <div class="row">
+    <!-- Icone modalita Pagamento -->
+    <div class="row"> 
             <div class="col-md-4 col-sm-4 orders-icon-container">
                 <div>
                     <i class="fa fa-money fa-2x" title="Contanti"></i> 

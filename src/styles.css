@@ -72,3 +72,8 @@ body{background-color:#344955 !important}
 .mat-badge-medium.mat-badge-before .mat-badge-content{left:5px}
 .mat-badge-medium.mat-badge-above .mat-badge-content{top:0}
 .mat-badge-medium .mat-badge-content{width:19px; height:18px;line-height: 20px;}
+.mat-badge-accent .mat-badge-content{background-color:#F9AA33; color:black;}
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{border-color:#F9AA33; background-color: #F9AA33; }
+.error{color:red}
+.ordini-tree-invisible{display: none;}  
+.ordini-tree ul,.ordini-tree li {margin-top: 0;margin-bottom: 0;list-style-type: none;}

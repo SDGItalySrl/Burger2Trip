@@ -18,6 +18,7 @@ export class HamburgerOptionsModalComponent{
     private opzione: FormControl;
     private bibita: FormControl;
 
+    
     constructor(private ordine: OrdineService,
                 private toastr: ToastrService,
                 public dialogRef: MatDialogRef<HamburgerOptionsModalComponent>,
@@ -58,20 +59,22 @@ export class HamburgerOptionsModalComponent{
                             id: 1,
                             nomeOpzione: "Tipo Cottura",
                             opzioneSelezionata : this.tipoCottura.value,
-                            priorita: 2
+                            priorita: 2,
+                            prezzo: undefined
                         },
                         {
                             id: 2,
                             nomeOpzione: "Opzione",
                             opzioneSelezionata: this.opzione.value,
                             priorita: 1,
-                            prezzo: (this.opzione.value == "Doppio Hamburger") ? 2.50 : 0
+                            prezzo: (this.opzione.value == "Doppio Hamburger") ? 2.50 : 0,
                         },
                         {
                             id: 3,
                             nomeOpzione: "Bibita",
                             opzioneSelezionata: this.bibita.value,
-                            priorita: 3
+                            priorita: 3,
+                            prezzo: undefined
                         }
                     ]
                 }

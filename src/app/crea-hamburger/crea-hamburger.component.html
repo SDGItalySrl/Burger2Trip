@@ -1,21 +1,22 @@
-
-<!-- <form [formGroup]="opzioniForm" (ngSubmit)="salvaProdotto()"> -->
     <div class="container-products container">
         <div class="row">
             <div class="col-md-8">
                 <h5>Menu</h5>
                 <div class="jumbotron product-menu">
+                    <form #createForm="ngForm" (ngSubmit)="aggiornaOrdine(createForm.value)">
                     <div class="container">
                         <div class="row card">
                             <div class="col-md-12 col-sm-12  mb-2">                                
-                                    <label id="crea-hamburger-label">Tipo Hamburger</label>
-                                    <mat-radio-group
-                                        aria-labelledby="crea-hamburger-label" class="radio-group" [(ngModel)]="tipoHamburger">
-                                        <mat-radio-button class="radio-button" *ngFor="let tipo of tipi" [value]="tipo">
+                                   <label id="crea-hamburger-label">Tipo Hamburger</label>
+                                     <mat-radio-group
+                                        aria-labelledby="crea-hamburger-label" class="radio-group" 
+                                        (ngModel)="tipoHamburger" name="tipoHamburger" required>
+                                        <mat-radio-button class="radio-button" [class.error]="createForm.controls.tipoHamburger?.invalid && createForm.controls.tipoHamburger?.touched" *ngFor="let tipo of tipi" [value]="tipo">
                                             {{tipo}}
                                         </mat-radio-button>
+                                        <em *ngIf="createForm.controls.tipoHamburger?.invalid && createForm.controls.tipoHamburger?.touched" class="error">Seleziona il Tipo Hamburger</em>
                                     </mat-radio-group>
-
+                                    
                                     <label id="crea-hamburger-label">Ingredienti</label>
                                     <mat-list>
                                         <mat-list-item *ngFor="let opzione of listaOpzioniSelezionate">
@@ -25,20 +26,25 @@
                                                        matBadgePosition="before"
                                                        matBadgeColor="accent" ></span>
                                             </h4>                                            
-                                            <button class="btn" (click)="aggiungiProdotto(opzione)">
-                                                <i class="fa fa-plus"></i>
+                                            <button class="btn" type="button"
+                                                (click)="aggiungiProdotto(opzione)">
+                                                    <i class="fa fa-plus"></i>
                                             </button>
-                                            <button class="btn ml-4" *ngIf="!opzione.quantita==0" 
-                                                    (click)="rimuoviProdotto(opzione)">
-                                                <i class="fa fa-minus"></i>
+                                            <button class="btn ml-4" type="button"
+                                                *ngIf="!opzione.quantita==0" 
+                                                (click)="rimuoviProdotto(opzione)">
+                                                    <i class="fa fa-minus"></i>
                                             </button>
                                         </mat-list-item>
                                     </mat-list>                                    
                             </div>
-                            <button mat-raised-button>Aggiungi</button>
+                            <button mat-raised-button type="submit"
+                                    [disabled]="createForm.invalid">
+                                Aggiungi </button>
                         </div>
                     
                     </div>
+                </form>
                 </div>
             </div>
 
@@ -47,6 +53,3 @@
             </div>
         </div>
     </div>
-<!-- </form> -->
-    
-        

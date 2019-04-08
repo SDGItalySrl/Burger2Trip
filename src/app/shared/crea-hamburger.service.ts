@@ -5,11 +5,7 @@ import { Subject } from 'rxjs';
 export class CreaHamburgerService{
     getOpzioni(){
         let subject = new Subject();
-        setTimeout(() =>{
-            subject.next(OPZIONI);
-            subject.complete();
-        }, 100);
-
+        setTimeout(() =>{ subject.next(OPZIONI); subject.complete(); }, 100);
         return subject;
     }
 
@@ -18,7 +14,7 @@ export class CreaHamburgerService{
     }
 
     getIndex(id:number){
-        return OPZIONI.map(function(ingredeiente) {return ingredeiente.id;}).indexOf(id);
+        return OPZIONI.map(function(ingrediente) {return ingrediente.id;}).indexOf(id);
     }
 }
 

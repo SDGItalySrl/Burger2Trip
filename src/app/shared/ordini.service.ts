@@ -1,13 +1,20 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IOrdine, IProdotto, IOpzioni } from './ordine.model';
+import { OrdineComponent } from '../ordini/ordini.component';
+
+
 
 @Injectable()
 export class OrdineService{
-    ordine: Ordine;
-    constructor(){
+    ordine: Ordine;   
+    constructor(private ordineComponent: OrdineComponent){
         this.ordine = new Ordine();
     }
-    
+
+    /**
+     * Inserisce il prodotto nell'oggetto Ordine
+     * @param ObjProdotto 
+     */
     inserisciProdotto(prodotto: Prodotto){
         let res: boolean = false;
         try {
@@ -20,13 +27,34 @@ export class OrdineService{
             console.log(error.message);
             res = false;
         }
-        console.log(this.ordine);
+        console.log(this.ordine);       
+        this.aggiornaComponenteOrdine();
         return res;
+    }
+
+    aggiornaComponenteOrdine(){
+        //Aggiorno la lista ordine nel ordineComponent per la visualizzazione dei prodotti nel cart
+        this.ordineComponent.updateordine(this.ordine);
+    }
+
+    /**
+     * Rimuove il prodotto selezionato dalla lista dell'ordine
+     */
+    rimuoviProdotto(id: number){
+        /*TO DO*/
+        
+    }
+
+    /**
+     * Ritorna l'ordine salvato in locale
+     */
+    getOrdine(): Ordine{
+        return this.ordine;
     }
 }
 
 export class Ordine implements IOrdine {
-    prodotti: Prodotto[];
+    prodotti?: Prodotto[];
     constructor(){
         this.prodotti = [];
     }
@@ -62,6 +90,6 @@ export class Opzioni implements IOpzioni{
     nomeOpzione: string;
     opzioneSelezionata?: string;
     priorita:number;
-    prezzo?: number;
+    prezzo: number;
     quantita?:number;
 }

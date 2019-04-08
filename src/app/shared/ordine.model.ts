@@ -1,6 +1,6 @@
 export interface IOrdine{
     id: number;
-    prodotti: IProdotto[];
+    prodotti?: IProdotto[];
     totale: number;
     nomeCliente: string;
     consegnaDomicilio: boolean;
@@ -32,6 +32,6 @@ export interface IOpzioni{
     nomeOpzione: string;
     opzioneSelezionata?: string;
     priorita:number;
-    prezzo?: number;
+    prezzo: number;
     quantita?: number;
 }

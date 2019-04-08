@@ -10,3 +10,4 @@ export * from '@angular/material/card';
 export * from '@angular/material/radio';
 export * from '@angular/material/list';
 export * from '@angular/material/badge';
+export * from '@angular/material/tree';

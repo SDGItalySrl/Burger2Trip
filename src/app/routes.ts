@@ -9,6 +9,7 @@ import { HamburgerResolver } from './hamburgers-detail/hamburger-resolver.servic
 import { FrittiResolver } from './fritti-details/fritti.resolver.service';
 import { BevandeResolver } from './bevande-details/bevande.resolver.service';
 import { CreaHamburgerResolver } from './crea-hamburger/crea-hamburger.resolver.service';
+import { OrdineComponent } from './ordini/ordini.component';
 
 export const appRoutes: Routes = [
     {path: '404', component: Error404Component},
@@ -17,5 +18,6 @@ export const appRoutes: Routes = [
     {path: 'menu/fritti-details', component: FrittiDetailComponent, resolve: {fritti: FrittiResolver}},
     {path: 'menu/bevande-details', component: BevandeDetailComponent, resolve: {bevande: BevandeResolver}},
     {path: 'menu/crea-hamburger', component: CreaHamburgerComponent, resolve: {ingredienti: CreaHamburgerResolver, ingredientiPuliti: CreaHamburgerResolver}},
+    {path: 'ordine', component: OrdineComponent},
     {path: '', redirectTo: '/menu', pathMatch:'full'}
 ];
