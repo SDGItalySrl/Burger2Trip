@@ -1,12 +1,55 @@
 <h5> Sezione ordini</h5>
 <div class="jumbotron orders">    
         <mat-list>
-            <mat-list-item *ngFor="let ordine of ordineList">
-                <h3 matLine> {{ordine.prodotti.nome}} </h3>
-                <p matLine> {{ordine.prodotti.opzioni.descrizione}} </p>
-                <p matLine class="demo-2"> {{ordine.prodotti.opzioni.ingredienti}} </p>
+            <mat-list-item *ngFor="let prodotto of ordineList.prodotti">                
+                <div class="row" *ngIf="prodotto">
+                    <div class="col-md-1 p-0 delete" *ngIf="prodotto.opzioni.length != 0"
+                         (click)="showHideOpzioni(prodotto.id)">
+                        <i class="fa fa-plus"></i>
+                    </div>
+                    <div class="col-md-7 p-0" *ngIf="prodotto.opzioni.length != 0">
+                        <h6> {{prodotto.nome}} </h6>
+                    </div>
+
+                    <!-- MOSTRO QUESTO DIV SOLAMENTE QUANDO UN PRODOTTO NON HA OPZIONI DA FAR VISUALIZZARE  -->
+                    <div class="col-md-8 p-0" *ngIf="prodotto.opzioni.length == 0">
+                            <h6> {{prodotto.nome}} </h6>
+                        </div>
+                    <div class="col-md-3 p-0">
+                        <h6> {{prodotto.prezzo | currency: 'EUR':'symbol':'1.2-2'}} </h6>
+                    </div>
+                    <div class="col-md-1 p-0 delete" (click)="eliminaProdotto(prodotto.id)">
+                        <i class="fa fa-trash"></i>
+                    </div>
+                </div>
+                
+                <div class="list-opzioni" *ngIf="prodotto.opzioni.length != 0 && prodotto.showOpzioni">
+                    <div class="row" *ngFor="let opzioni of prodotto.opzioni"> 
+                        <p class="col-md-8 opzioni-details"> 
+                            {{opzioni.nomeOpzione}}
+                        </p>
+                        <p class="col-md-3 opzioni-details"> 
+                            {{opzioni.prezzo | currency: 'EUR':'symbol':'1.2-2'}}
+                        </p>
+                        <p class="col-md-1 delete p-0" (click)="eliminaOpzione(prodotto.id, opzioni.id)"> 
+                            <i class="fa fa-trash"></i>
+                        </p>
+                    </div>
+                <br>
+                </div>
             </mat-list-item>
         </mat-list>
+
+    <hr *ngIf="ordineList.prodotti.length != 0">
+        <!-- DIV PREZZO TOTALE -->
+        <div class="row" *ngIf="ordineList.prodotti.length != 0">
+            <div class="col-md-8">
+                <h6>Totale: </h6>
+            </div>
+            <div class="col-md-4">
+                <p>{{prezzoTotale | currency: 'EUR':'symbol':'1.2-2'}}</p>
+            </div>            
+        </div>
     <hr>
     <!-- Icone modalita Pagamento -->
     <div class="row"> 

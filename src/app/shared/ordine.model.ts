@@ -24,6 +24,7 @@ export interface IProdotto{
     priorita: number;
     opzioni: IOpzioni[];
     isMenu : Boolean;
+    showOpzioni: Boolean;
 }
 
 

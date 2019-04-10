@@ -4,6 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IHamburger } from 'src/app/shared/hamburger.model';
 import { OrdineService, Prodotto } from 'src/app/shared/ordini.service';
 import { ToastrService } from '../../common/toastr.service';
+import { OrdineComponent } from '../../ordini/ordini.component'; 
+import { HamburgerService } from 'src/app/shared/hamburger.service';
 
 @Component({
     selector:'hamburger-modal',
@@ -21,6 +23,7 @@ export class HamburgerOptionsModalComponent{
     
     constructor(private ordine: OrdineService,
                 private toastr: ToastrService,
+                private hamburgerService: HamburgerService,
                 public dialogRef: MatDialogRef<HamburgerOptionsModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any){  }
 
@@ -44,6 +47,9 @@ export class HamburgerOptionsModalComponent{
         })
     }
 
+    /**
+     * Compone l'oggetto prodotto sul submit del from e salva il prodotto
+     */
     salvaProdotto(){
             try {
                 if(this.opzioniForm.valid){
@@ -54,6 +60,7 @@ export class HamburgerOptionsModalComponent{
                     prezzo: (this.data.isMenu == true) ? this.hamburger.prezzo_menu : this.hamburger.prezzo_singolo,
                     priorita: 1,
                     isMenu: this.data.isMenu,
+                    showOpzioni: false,
                     opzioni: [
                         {
                             id: 1,
@@ -76,21 +83,27 @@ export class HamburgerOptionsModalComponent{
                             priorita: 3,
                             prezzo: undefined
                         }
-                    ]
-                }
+                    ]}
+                //calcolo il prezzo totale in base al tipo di hamburger selezionato (doppio hamburger o singolo)
+                prodotto.prezzo = this.hamburgerService.calcoloPrezzoTotale(prodotto);
                 let res: boolean = this.ordine.inserisciProdotto(prodotto); //inserisco il prodotto chiamando il servizio ordine
                 this.dialogRef.close();
-                if(res)
+                if(res){
                     this.toastr.success("Prodotto aggiunto all'ordine");
+                }
             }   
-            }
-            catch (error) {
-                console.log(error);
-            }
+        }
+        catch (error) {
+            console.log(error);
+        }
             
-        }     
+    }     
 
+    /**
+     * Chiude il dialog dettagli hamburger
+     */
     chiudi(){
         this.dialogRef.close();
     }
+
 }

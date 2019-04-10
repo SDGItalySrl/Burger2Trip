@@ -28,7 +28,8 @@ export class BevandeDetailComponent{
                 prezzo: objBevanda.prezzo,
                 priorita: 3,
                 isMenu: false,
-                opzioni: []  
+                showOpzioni: false,
+                opzioni: undefined  
         }
         let res: boolean = this.ordine.inserisciProdotto(prodotto);
         if(res)

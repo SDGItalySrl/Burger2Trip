@@ -5,6 +5,9 @@ import { IHamburger } from './hamburger.model'
 @Injectable()
 export class HamburgerService{
 
+    /**
+     * Ritorna la costante HamburgerList
+     */
     getHumburgers(){
         let subject = new Subject();
         setTimeout(() => {
@@ -13,8 +16,29 @@ export class HamburgerService{
         }, 100);
         return subject
     }
+    /**
+     * Ritorna l'hamburger richiesto in base all'id
+     * @param id idHamburger
+     */
     getHamburger(id: number){
         return HAMBURGERLIST.find(hamburger => hamburger.id == id);
+    }
+    /**
+     * Calcola il totale del prodotto sommando il prezzo delle opzioni
+     * @param array objProdotto
+     */
+    calcoloPrezzoTotale(objProdotto){
+        try {
+            for (let index = 0; index < objProdotto.opzioni.length; index++) {
+                if(objProdotto.opzioni[index].prezzo != undefined){
+                    objProdotto.prezzo += objProdotto.opzioni[index].prezzo; 
+                }
+            }
+            return objProdotto.prezzo; 
+        } 
+        catch (error) {
+            console.log(error);
+        }
     }
 }
 

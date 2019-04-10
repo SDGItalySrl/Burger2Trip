@@ -26,7 +26,8 @@ export class FrittiDetailComponent{
                 prezzo: objFritto.prezzo,
                 priorita: 2,
                 isMenu: false,
-                opzioni: []                
+                showOpzioni: false,
+                opzioni: undefined                
             }
             let res: boolean = this.ordine.inserisciProdotto(prodotto);
             if(res)

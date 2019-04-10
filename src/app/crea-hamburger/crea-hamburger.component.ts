@@ -3,6 +3,7 @@ import { Opzioni, OrdineService, Prodotto } from '../shared/ordini.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from '../common/toastr.service';
 import { CreaHamburgerService } from '../shared/crea-hamburger.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
     selector: 'crea-hamburger',
@@ -10,17 +11,20 @@ import { CreaHamburgerService } from '../shared/crea-hamburger.service';
 })
 
 export class CreaHamburgerComponent{
+    creaForm: FormGroup
     @Input() required: Boolean;
     tipoHamburger: string;
     listaOpzioniSelezionate: any[];
     tipi: string[] = ['Hamburger Vegetariano', 'Pane e Carne', 'Pane e Cotoletta di pollo'];
-    prezzoTotale: number = 0;    
+    prezzoTotOpzioni: number = 0;    
+    prezzoHamburger: number = 4.5;
     prodotto: Prodotto = {
         id: undefined,
         nome: undefined,
-        prezzo: this.prezzoTotale,
+        prezzo: this.prezzoHamburger,
         priorita: 1,
         isMenu: false,
+        showOpzioni: false,
         opzioni: []        
     }     
     ingredienti: Opzioni;
@@ -32,8 +36,12 @@ export class CreaHamburgerComponent{
 
     ngOnInit(){
         this.listaOpzioniSelezionate = this.route.snapshot.data['ingredienti'];
-    }
 
+        let tipoHamburger = new FormControl("", Validators.required);
+        this.creaForm = new FormGroup({
+            tipoHamburger: tipoHamburger
+        })
+    }
     /**
      * Inserisce l'ingrediente nell'oggetto prodotto
      * @param ObjIngrediente 
@@ -74,7 +82,6 @@ export class CreaHamburgerComponent{
             console.log(error);
         }
     }
-
     /**
      * Rimuove l'ingrediente dall'oggetto prodotto
      * @param ObjIngrediente 
@@ -97,14 +104,13 @@ export class CreaHamburgerComponent{
         }
 
     }
-
     /**
      * Calcola il prezzo totale per il prodotto 
      */
     calcolaPrezzoTot(){
         try {
             for (let i = 0; i < this.prodotto.opzioni.length; i++) {
-                this.prezzoTotale += this.prodotto.opzioni[i].prezzo;
+                this.prezzoTotOpzioni += this.prodotto.opzioni[i].prezzo;
             }
         } 
         catch (error) {
@@ -112,19 +118,36 @@ export class CreaHamburgerComponent{
         }
         
     }
-
     /**
      * Invia l'oggetto prodotto al componente Ordine
+     * @value tipoHamburger
      */
-    aggiornaOrdine(value){
+    aggiornaOrdine(value){  
         this.calcolaPrezzoTot();
-        this.prodotto.prezzo = this.prezzoTotale;
+        this.prodotto.prezzo = this.prezzoTotOpzioni + this.prezzoHamburger;
         this.prodotto.nome = value.tipoHamburger;
-        console.log(this.prodotto);
-        // if(this.ordine.inserisciProdotto(this.prodotto))
-        //     this.toastr.success("Proddotto aggiunto correttamente");
-        // else
-        //     this.toastr.error("Qualcosa è andato storto, contattare l'amministratore");
+        console.log(value.tipoHamburger)
+        if(this.ordine.inserisciProdotto(this.prodotto)){ //inserisco il prodotto chiamando il servizio ordine
+            this.toastr.success("Proddotto aggiunto correttamente");
+            console.log(this.prodotto);
+            
+            setTimeout(() => {
+                this.creaForm.reset();
+                this.reimpostaOggettoProdotto();                
+            }, 200);
+        }
+        else
+            this.toastr.error("Qualcosa è andato storto, contattare l'amministratore");
+    }
+
+    /**
+     * Dopo l'inserimento del prodotto all'ordine reimposta l'oggetto prodotto con le imformazioni di default
+     */
+    reimpostaOggettoProdotto(){
+        this.prodotto.nome = undefined;
+        this.prodotto.prezzo = this.prezzoHamburger;
+        this.prodotto.opzioni = [];
+        this.listaOpzioniSelezionate = listOpzioniPulita;
     }
 }
 

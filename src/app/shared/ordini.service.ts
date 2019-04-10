@@ -1,14 +1,24 @@
 import { Injectable } from '@angular/core';
 import { IOrdine, IProdotto, IOpzioni } from './ordine.model';
 import { OrdineComponent } from '../ordini/ordini.component';
+import { BehaviorSubject } from 'rxjs';
 
 
 
 @Injectable()
 export class OrdineService{
-    ordine: Ordine;   
-    constructor(private ordineComponent: OrdineComponent){
+    ordine: Ordine;
+    private ordineListProdotti;
+    ordineListAggiornato; 
+    private prezzoTotale;
+    prezzoTotaleAggiornato;
+
+    constructor(){
         this.ordine = new Ordine();
+        this.ordineListProdotti = new BehaviorSubject(this.ordine.prodotti);
+        this.ordineListAggiornato = this.ordineListProdotti.asObservable(); //VARIABILE UTILIZZATA DAI COMPONENTI PER INVIARE/RICEVERE DATI
+        this.prezzoTotale = new BehaviorSubject<number>(this.ordine.totale);
+        this.prezzoTotaleAggiornato = this.prezzoTotale.asObservable(); //VARIABILE UTILIZZATA DAI COMPONENTI PER INVIARE/RICEVERE DATI
     }
 
     /**
@@ -27,22 +37,50 @@ export class OrdineService{
             console.log(error.message);
             res = false;
         }
-        console.log(this.ordine);       
-        this.aggiornaComponenteOrdine();
+        //AGGIORNO LA LISTA ORDINE UTILIZZATA DALL'ORDINE COMPONENT
+        this.ordineListProdotti.next(this.ordine.prodotti);
+        this.calcoloPrezzoTotale();
         return res;
     }
 
-    aggiornaComponenteOrdine(){
-        //Aggiorno la lista ordine nel ordineComponent per la visualizzazione dei prodotti nel cart
-        this.ordineComponent.updateordine(this.ordine);
+    /**
+     * Elimina il prodotto selezionato dall'array ordine
+     * @param prodotto id prodotto
+     */
+    eliminaProdotto(id: number){
+        try {
+            //Ricavo l'indice del prodotto attraverso l'idProdotto
+            let indiceProdotto = this.ordine.prodotti.map(function(prodotto) {return prodotto.id;}).indexOf(id)
+            this.ordine.prodotti.splice(indiceProdotto, 1);
+            console.log(this.ordine.prodotti)
+            //Aggiorno la lista dei prodotti per la ordini.component
+            this.ordineListProdotti.next(this.ordine.prodotti);
+            this.calcoloPrezzoTotale();  // ricalcola il prezzoTotale
+            console.log(this.prezzoTotale)
+        } 
+        catch (error) {
+            console.log(error)
+        }
     }
 
     /**
-     * Rimuove il prodotto selezionato dalla lista dell'ordine
+     * Elimina l'opzione dal prodotto selezionato
+     * @param idProdotto id prodotto
+     * @param idOpzione id opzione
      */
-    rimuoviProdotto(id: number){
-        /*TO DO*/
-        
+    eliminaOpzioniProdotto(idProdotto: number, idOpzione: number){
+        try {
+            //Ricavo l'indice dell'opzione attraverso l'id opzione
+            let indiceOpzione = this.ordine.prodotti[idProdotto].opzioni.map(function(opzione) {return opzione.id;}).indexOf(idOpzione);
+            this.ordine.prodotti[idProdotto].opzioni.splice(indiceOpzione, 1);
+            console.log(this.ordine.prodotti[idProdotto].opzioni)
+            //Aggiorno la lista dei prodotti per la ordini.component
+            this.ordineListProdotti.next(this.ordine.prodotti);
+            this.calcoloPrezzoTotale();  // ricalcola il prezzoTotale
+        } 
+        catch (error) {
+            console.log(error)
+        }
     }
 
     /**
@@ -51,8 +89,23 @@ export class OrdineService{
     getOrdine(): Ordine{
         return this.ordine;
     }
-}
 
+    /**
+     * Calcola il prezzo totale dell'ordine
+     */
+    calcoloPrezzoTotale(){
+        try {
+            this.ordine.totale=0;
+            for (let index = 0; index < this.ordine.prodotti.length; index++) {
+                this.ordine.totale += this.ordine.prodotti[index].prezzo;
+            }    
+            this.prezzoTotale.next(this.ordine.totale);
+        } 
+        catch (error) {
+            console.log(error);
+        }
+    }
+}
 export class Ordine implements IOrdine {
     prodotti?: Prodotto[];
     constructor(){
@@ -81,6 +134,7 @@ export class Prodotto implements IProdotto{
     priorita: number;    
     opzioni: Opzioni[];
     isMenu : boolean;
+    showOpzioni: boolean;
     constructor(){
         this.opzioni = [];
     }

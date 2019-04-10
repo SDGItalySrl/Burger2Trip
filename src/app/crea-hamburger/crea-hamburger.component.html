@@ -3,18 +3,19 @@
             <div class="col-md-8">
                 <h5>Menu</h5>
                 <div class="jumbotron product-menu">
-                    <form #createForm="ngForm" (ngSubmit)="aggiornaOrdine(createForm.value)">
+                    <form [formGroup]="creaForm" (ngSubmit)="aggiornaOrdine(creaForm.value)">
                     <div class="container">
                         <div class="row card">
                             <div class="col-md-12 col-sm-12  mb-2">                                
                                    <label id="crea-hamburger-label">Tipo Hamburger</label>
                                      <mat-radio-group
                                         aria-labelledby="crea-hamburger-label" class="radio-group" 
+                                        formControlName="tipoHamburger"
                                         (ngModel)="tipoHamburger" name="tipoHamburger" required>
-                                        <mat-radio-button class="radio-button" [class.error]="createForm.controls.tipoHamburger?.invalid && createForm.controls.tipoHamburger?.touched" *ngFor="let tipo of tipi" [value]="tipo">
+                                        <mat-radio-button class="radio-button" [class.error]="creaForm.controls.tipoHamburger?.invalid && creaForm.controls.tipoHamburger?.touched" *ngFor="let tipo of tipi" [value]="tipo">
                                             {{tipo}}
                                         </mat-radio-button>
-                                        <em *ngIf="createForm.controls.tipoHamburger?.invalid && createForm.controls.tipoHamburger?.touched" class="error">Seleziona il Tipo Hamburger</em>
+                                        <em *ngIf="creaForm.controls.tipoHamburger?.invalid && creaForm.controls.tipoHamburger?.touched" class="error">Seleziona il Tipo Hamburger</em>
                                     </mat-radio-group>
                                     
                                     <label id="crea-hamburger-label">Ingredienti</label>
@@ -39,7 +40,7 @@
                                     </mat-list>                                    
                             </div>
                             <button mat-raised-button type="submit"
-                                    [disabled]="createForm.invalid">
+                                    [disabled]="creaForm.invalid">
                                 Aggiungi </button>
                         </div>
                     

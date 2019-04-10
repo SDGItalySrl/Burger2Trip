@@ -51,7 +51,9 @@ import { CreaHamburgerResolver } from './crea-hamburger/crea-hamburger.resolver.
     FrittiDetailComponent,
     BevandeDetailComponent,
     OrdineComponent,
-    HamburgerOptionsModalComponent
+    HamburgerOptionsModalComponent,
+    OrdineComponent,
+    CreaHamburgerComponent
   ],
   imports: [
   BrowserModule,

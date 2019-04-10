@@ -77,3 +77,9 @@ body{background-color:#344955 !important}
 .error{color:red}
 .ordini-tree-invisible{display: none;}  
 .ordini-tree ul,.ordini-tree li {margin-top: 0;margin-bottom: 0;list-style-type: none;}
+.orders .mat-list-item-content {display: block !important;}
+.orders .delete .fa{position: absolute;margin-top: 0;}
+ul{list-style: none;}
+.list-opzioni{margin:0; padding:0;}
+.orders .mat-list-base .mat-list-item, .orders .mat-list-base .mat-list-option{height:auto;}
+.opzioni-details{font-size: 0.8rem; margin-left: 30px;}
