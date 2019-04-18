@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectorRef } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IHamburger } from 'src/app/shared/hamburger.model';
@@ -16,22 +16,23 @@ export class HamburgerOptionsModalComponent{
     opzioniForm: FormGroup;
     public titoloDialog: any;
     public hamburger: IHamburger;
-    private tipoCottura: FormControl;
-    private opzione: FormControl;
-    private bibita: FormControl;
+    tipoCottura: FormControl;
+    opzione: FormControl;
+    bibita: FormControl;
 
     
     constructor(private ordine: OrdineService,
                 private toastr: ToastrService,
                 private hamburgerService: HamburgerService,
+                private cdr: ChangeDetectorRef,
                 public dialogRef: MatDialogRef<HamburgerOptionsModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any){  }
 
     ngOnInit(){
         //la variabile hamburger contiene l'oggetto proveniente dal componente padre hamburger.component.ts
         this.hamburger = this.data.objHamburger;
-        this.titoloDialog = this.hamburger.nome;
-
+        this.titoloDialog = this.hamburger.nome; 
+        
         this.tipoCottura = new FormControl('');
         this.opzione = new FormControl('');
         if(this.data.isMenu)
@@ -47,11 +48,25 @@ export class HamburgerOptionsModalComponent{
         })
     }
 
+    /** 
+     * Converto i numeri da stringe a int.
+     * Utilizzo .toString() perchè il tipo dei dati è number quindi non mi faceva parsare.
+    */
+    convertiDati(){
+        this.hamburger.id = parseInt(this.hamburger.id.toString());
+        this.hamburger.prezzo_menu = parseFloat(this.hamburger.prezzo_menu.toString());
+        this.hamburger.prezzo_singolo = parseFloat(this.hamburger.prezzo_singolo.toString());
+    }
     /**
      * Compone l'oggetto prodotto sul submit del from e salva il prodotto
      */
     salvaProdotto(){
-            try {
+            try {                
+                //converto i numeri da stringe a int
+                this.convertiDati();
+
+                console.log(this.hamburger)
+
                 if(this.opzioniForm.valid){
                 //Compongo l'oggetto prodotto da inserire all'interno dell'oggetto Ordine 
                 let prodotto: Prodotto = {

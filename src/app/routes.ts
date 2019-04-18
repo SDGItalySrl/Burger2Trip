@@ -5,19 +5,17 @@ import { HamburgersDetailComponent } from './hamburgers-detail/hamburger.compone
 import { FrittiDetailComponent } from './fritti-details/fritti.component';
 import { BevandeDetailComponent } from './bevande-details//bevande.component';
 import { CreaHamburgerComponent } from './crea-hamburger/crea-hamburger.component';
-import { HamburgerResolver } from './hamburgers-detail/hamburger-resolver.service';
-import { FrittiResolver } from './fritti-details/fritti.resolver.service';
-import { BevandeResolver } from './bevande-details/bevande.resolver.service';
-import { CreaHamburgerResolver } from './crea-hamburger/crea-hamburger.resolver.service';
 import { OrdineComponent } from './ordini/ordini.component';
+import { UtenteComponent } from './utente/utente.component';
 
 export const appRoutes: Routes = [
     {path: '404', component: Error404Component},
     {path: 'menu', component: MenuComponent},
-    {path: 'menu/hamburgers-details', component: HamburgersDetailComponent, resolve: {hamburgers: HamburgerResolver} },
-    {path: 'menu/fritti-details', component: FrittiDetailComponent, resolve: {fritti: FrittiResolver}},
-    {path: 'menu/bevande-details', component: BevandeDetailComponent, resolve: {bevande: BevandeResolver}},
-    {path: 'menu/crea-hamburger', component: CreaHamburgerComponent, resolve: {ingredienti: CreaHamburgerResolver, ingredientiPuliti: CreaHamburgerResolver}},
+    {path: 'menu/hamburgers-details', component: HamburgersDetailComponent },
+    {path: 'menu/fritti-details', component: FrittiDetailComponent },
+    {path: 'menu/bevande-details', component: BevandeDetailComponent},
+    {path: 'menu/crea-hamburger', component: CreaHamburgerComponent},
+    {path: 'utente', component: UtenteComponent},
     {path: 'ordine', component: OrdineComponent},
     {path: '', redirectTo: '/menu', pathMatch:'full'}
 ];

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { OrdineService, Ordine, Prodotto, Opzioni } from '../shared/ordini.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -8,14 +9,18 @@ import { OrdineService, Ordine, Prodotto, Opzioni } from '../shared/ordini.servi
     styles:[ `
         p{margin:0;}
         h6{color:black;}
+        .order-button{color: black;}
     `]
 })
 
 export class OrdineComponent{ 
     ordineList: Ordine;
     prezzoTotale: number = 0;
+    prezzoConsegna: number = 0;
+    asporto: boolean = false;
 
-    constructor(private ordineService: OrdineService){
+    constructor(private ordineService: OrdineService,
+                private router: Router){
         this.ordineList = new Ordine();
      }
 
@@ -31,6 +36,16 @@ export class OrdineComponent{
                 this.prezzoTotale = prezzo;
             }
         );
+
+        this.ordineService.flagConsegnaAggiornato.subscribe(
+            flag => {
+                (flag == true) ? this.prezzoConsegna = 3 : this.prezzoConsegna = 0
+            }
+        );
+
+        this.ordineService.flagAsporto.subscribe(
+            flag => {this.asporto = flag;}
+        );
     }
     /**
      * Elimina il prodotto dall'ordine
@@ -39,8 +54,6 @@ export class OrdineComponent{
     eliminaProdotto(id: number){
         try{
             this.ordineService.eliminaProdotto(id);
-            console.log(this.prezzoTotale)
-            console.log(this.ordineList)
         }
         catch(error){
             console.log(error);
@@ -54,8 +67,6 @@ export class OrdineComponent{
     eliminaOpzione(idProdotto: number, idOpzione: number){
         try{
             this.ordineService.eliminaOpzioniProdotto(idProdotto, idOpzione);
-            console.log(this.prezzoTotale)
-            console.log(this.ordineList)
         }
         catch(error){
             console.log(error);
@@ -82,5 +93,28 @@ export class OrdineComponent{
         this.ordineList = ordine;
     }
 
-    
+    /**
+     * Controlla il contenuto delle opzioni per far visualizzare il bottone + sul template
+     * @param opzioni objOpzioni
+     */
+    checkOpzioni(prodotto: Prodotto){
+        var res = false;
+        let contOpzioniSelezionate = 0;
+        for (let index = 0; index < prodotto.opzioni.length; index++) {
+            if(prodotto.opzioni[index].opzioneSelezionata != "")    
+                contOpzioniSelezionate += 1
+        }        
+        if(contOpzioniSelezionate != 0)
+            res = true;
+        
+        return res;
+    }
+
+   /**
+    * Reindirizza l'utente alla pagina Utente per completare l'ordine inserendo l'informazione sul cliente
+    */
+   completaOrdine(){
+       this.router.navigate(['/utente']);
+   }
+
 }

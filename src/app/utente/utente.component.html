@@ -1,0 +1,84 @@
+<div class="container-products container">
+        <div class="row">
+            <div class="col-md-8">
+                <h5>Menu</h5>
+                <div class="jumbotron utente">
+                    <form [formGroup]="formInfoUtente" (ngSubmit)="completaOrdine(formInfoUtente.value)">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <mat-form-field class="full">
+                                    <input formControlName="nome"
+                                            matInput placeholder="Nome" [required]="formInfoUtente.controls.consegnaDomicilio.value">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <mat-form-field class="full">
+                                <input type="tel" formControlName="telefono"
+                                       matInput placeholder="Telephone" [required]="formInfoUtente.controls.consegnaDomicilio.value">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <mat-form-field class="full">
+                                    <input formControlName="indirizzo"
+                                              matInput placeholder="Indirizzo" [required]="formInfoUtente.controls.consegnaDomicilio.value">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <mat-form-field [hideRequiredMarker]="true" class="full">
+                                    <input formControlName="citta"
+                                           matInput placeholder="Citta">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <mat-form-field [hideRequiredMarker]="true" class="full">
+                                    <input formControlName="citofono"
+                                           matInput placeholder="Citofono">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <mat-form-field [hideRequiredMarker]="true" class="full">
+                                    <input formControlName="internoScala" 
+                                           matInput placeholder="Interno scala">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <mat-form-field class="full">
+                                    <input formControlName="data"
+                                           matInput [matDatepicker]="picker" placeholder="Data">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <mat-form-field class="full">
+                                    <input formControlName="orario" 
+                                           matInput type="time" placeholder="Orario" [required]="formInfoUtente.controls.consegnaDomicilio.value">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12 col-sm-12">
+                                <mat-form-field class="full">
+                                    <textarea formControlName="note" matInput placeholder="Note - Allergie"></textarea>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 col-sm-3">
+                                <mat-checkbox  class="full" formControlName="consegnaDomicilio" >Consegna a domicilio </mat-checkbox>
+                            </div>
+                            <div class="col-md-6 col-sm-3">
+                                <mat-checkbox  class="full" formControlName="asporto" >Asporto </mat-checkbox>
+                            </div>
+                            <div class="col-md-6 col-sm-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-md-6 col-sm-3">
+                                <button [disabled]="formInfoUtente.invalid" class="order-button" mat-button>Ordina Adesso</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <orders-container></orders-container>
+            </div>
+        </div>
+    </div>

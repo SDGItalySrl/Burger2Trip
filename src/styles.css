@@ -32,9 +32,10 @@ body{background-color:#344955 !important}
 }
 
 .alergy-alert hr{border-top-color:white;}
-#list-nav-bar .nav-link.active{color: #F9AA33;}
-#menu-navbar{background-color: #344955 !important;}
-#menu-navbar .nav-link{color:white;}
+#list-nav-bar .nav-link.active, #list-nav-bar .dropdown-item.active, #list-nav-bar .dropdown-item:active{color: #F9AA33;}
+#menu-navbar, #list-nav-bar .dropdown-item, #list-nav-bar .dropdown-menu{background-color: #344955 !important;}
+#list-nav-bar .dropdown-item.active, #list-nav-bar .dropdown-item:active{background-color:#4A6572 !important}
+#menu-navbar .nav-link, #list-nav-bar .dropdown-item, #list-nav-bar .dropdown-menu{color:white;}
 .container .jumbotron{
     background-color: #4A6572;
     color:white;
@@ -53,17 +54,16 @@ body{background-color:#344955 !important}
 .text {font-size: 22px; color:white}
 .descrizione h6{text-align: center}
 .descrizione{width: 100%; color:white}
-.menu .card{border:0;background-color: #4A6572;}
+.menu .card{border:0;background-color: #E8E8E8;}
 .product-title h6{font-weight: bold;}
 .container-products .jumbotron{background-color:#E8E8E8}
-.card, .container-products h5, .orders p{color:#535353;}
-.orders .fa{color:#F9AA33}
+.card, .container-products h5, .orders p, .product-menu .fa, .container .utente{color:#535353;}
+.orders .fa, .orders .fas, .orders .far, .orders .fab, .orderCount{color:#F9AA33}
 .orders-icon-container{text-align: center}
 .example-container {display: flex; flex-direction: column;}  
 .example-container > * {width: 100%;}
 .product-menu .btn{padding: 0%;vertical-align: unset;}
 #toast-container *{background-color: green}
-.product-menu .fa{ color:#535353}
 .radio-group{display:flex; flex-direction:column;margin:5px 15px;}
 .radio-button{margin:5px;}
 #crea-hamburger-label{margin-top:10px; font-weight: bold;}
@@ -78,8 +78,12 @@ body{background-color:#344955 !important}
 .ordini-tree-invisible{display: none;}  
 .ordini-tree ul,.ordini-tree li {margin-top: 0;margin-bottom: 0;list-style-type: none;}
 .orders .mat-list-item-content {display: block !important;}
-.orders .delete .fa{position: absolute;margin-top: 0;}
+.orders .delete .fas{position: absolute;margin-top: 0;}
 ul{list-style: none;}
 .list-opzioni{margin:0; padding:0;}
 .orders .mat-list-base .mat-list-item, .orders .mat-list-base .mat-list-option{height:auto;}
 .opzioni-details{font-size: 0.8rem; margin-left: 30px;}
+.full{width: 100%}
+.order-button{float: right;width: 50%;text-align: center;color: #4A6572;background-color: #F9AA33;}
+.order-detail-font{font-size:0.9rem}
+.order-detail-fa{vertical-align: top; font-size: 0.9rem}

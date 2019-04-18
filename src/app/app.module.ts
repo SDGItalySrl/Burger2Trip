@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
    BrowserAnimationsModule,
@@ -15,6 +15,9 @@ import {
    MatRadioModule,
    MatListModule,
    MatBadgeModule,
+   MatDatepickerModule, 
+   MatNativeDateModule, 
+   MatInputModule
   } from './material';
 import { NavbarComponent} from './nav/nav.component';
 import { AppComponent } from './app.component';
@@ -26,19 +29,20 @@ import { FrittiDetailComponent } from './fritti-details/fritti.component';
 import { BevandeDetailComponent } from './bevande-details//bevande.component';
 import { CreaHamburgerComponent } from './crea-hamburger/crea-hamburger.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HamburgerResolver } from './hamburgers-detail/hamburger-resolver.service';
 import { HamburgerService } from './shared/hamburger.service';
 import { OrdineService } from './shared/ordini.service';
 import { OrdineComponent } from './ordini/ordini.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HamburgerOptionsModalComponent } from './hamburgers-detail/hamburger-options-modal/hamburger-options-modals.component';
-import { FrittiResolver } from './fritti-details/fritti.resolver.service';
 import { FrittiService } from './shared/fritti.service';
 import { ToastrService } from './common/toastr.service';
 import { BevandeService } from './shared/bevande.service';
-import { BevandeResolver } from './bevande-details/bevande.resolver.service';
 import { CreaHamburgerService } from './shared/crea-hamburger.service';
-import { CreaHamburgerResolver } from './crea-hamburger/crea-hamburger.resolver.service';
+import { UtenteComponent } from './utente/utente.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { HttpCacheService } from './shared/httpCacheService.service';
+import { CacheInterceptor } from './shared/cache.interceptor'
 
 @NgModule({
   declarations: [
@@ -53,7 +57,8 @@ import { CreaHamburgerResolver } from './crea-hamburger/crea-hamburger.resolver.
     OrdineComponent,
     HamburgerOptionsModalComponent,
     OrdineComponent,
-    CreaHamburgerComponent
+    CreaHamburgerComponent,
+    UtenteComponent
   ],
   imports: [
   BrowserModule,
@@ -67,6 +72,9 @@ import { CreaHamburgerResolver } from './crea-hamburger/crea-hamburger.resolver.
   MatRadioModule,
   MatListModule,
   MatBadgeModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatInputModule,
   RouterModule.forRoot(appRoutes),
   HttpClientModule,
   FlexLayoutModule,
@@ -74,19 +82,19 @@ import { CreaHamburgerResolver } from './crea-hamburger/crea-hamburger.resolver.
   NgbModule,
   HttpClientModule,
   FormsModule,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     HamburgerService,
-    HamburgerResolver,
     OrdineService,
     FrittiService,
-    FrittiResolver,
     ToastrService,
     BevandeService,
-    BevandeResolver,
     CreaHamburgerService,
-    CreaHamburgerResolver
+    MatDatepickerModule,
+    HttpCacheService,
+    {provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true}
   ],
   entryComponents:[
     HamburgerOptionsModalComponent

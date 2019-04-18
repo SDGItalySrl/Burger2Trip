@@ -21,8 +21,8 @@
                                     <label id="crea-hamburger-label">Ingredienti</label>
                                     <mat-list>
                                         <mat-list-item *ngFor="let opzione of listaOpzioniSelezionate">
-                                            <h4 mat-line>{{opzione.nome}}
-                                                <span *ngIf="!opzione.quantita==0" 
+                                            <h4 mat-line>{{opzione.nomeOpzione}}
+                                                <span *ngIf="opzione.quantita!=0" 
                                                        matBadge="{{opzione.quantita}}" matBadgeOverlap="false"
                                                        matBadgePosition="before"
                                                        matBadgeColor="accent" ></span>
@@ -32,7 +32,7 @@
                                                     <i class="fa fa-plus"></i>
                                             </button>
                                             <button class="btn ml-4" type="button"
-                                                *ngIf="!opzione.quantita==0" 
+                                                *ngIf="opzione.quantita!=0" 
                                                 (click)="rimuoviProdotto(opzione)">
                                                     <i class="fa fa-minus"></i>
                                             </button>

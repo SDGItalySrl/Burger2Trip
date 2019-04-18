@@ -1,90 +1,22 @@
 import { Injectable } from "@angular/core";
-import { Subject } from 'rxjs';
-import { IBevande } from '../shared/bevande.model'
+import { IBevande } from '../shared/bevande.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 
 @Injectable()
 export class BevandeService{
-    getBevande(){
-        let subject = new Subject();
-        setTimeout(() => {
-            subject.next(BEVANDE);
-            subject.complete();
-        }, 100);
-        return subject;
+    private url="http://192.168.1.100:8083/spreadsheets?spreadSheetID=16RWD1WCxG904rGeP04DArBHqfovlN102GY65aZhLJcU&range=A%3AD&searchFilter&api-version=1.0";
+    
+    constructor(private http: HttpClient){ }
+    
+    getBevande(): Observable<Bevande>{
+        console.log('getting bevande from http request');
+        return <Observable<Bevande>> this.http.get(this.url)
     }
 
-    getBevanda(id: number){
-        return BEVANDE.find(bevande => bevande.id == id)
-    }
 }
 
-const BEVANDE : IBevande[] = [
-    {
-        id: 1,
-        nome: "Coca Cola",
-        prezzo: 2,
-        tipologia: "B"
-    },
-    {
-        id: 2,
-        nome: "Fanta",
-        prezzo: 2,
-        tipologia: "B"
-    },
-    {
-        id: 3,
-        nome: "Sprite",
-        prezzo: 2,
-        tipologia: "B"
-    },
-    {
-        id: 4,
-        nome: "Coca Cola Zero",
-        prezzo: 2,
-        tipologia: "B"
-    },
-    {
-        id: 5,
-        nome: "Coca Cola",
-        prezzo: 2,
-        tipologia: "B"
-    },
-    {
-        id: 6,
-        nome: "Lipton Ice Tea al Limone",
-        prezzo: 2,
-        tipologia: "B"
-    },
-    {
-        id: 7,
-        nome: "Lipton Ice Tea alla Pesca",
-        prezzo: 2,
-        tipologia: "B"
-    },
-    {
-        id: 8,
-        nome: "Moretti",
-        prezzo: 3,
-        tipologia: "BA"
-    },
-    {
-        id: 9,
-        nome: "Bud",
-        prezzo: 3,
-        tipologia: "BA"
-    },
-    {
-        id: 10,
-        nome: "Ichnusa non Filtrata",
-        prezzo: 3,
-        tipologia: "BA"
-    },
-    {
-        id: 11,
-        nome: "Birra Artigianale",
-        prezzo: 6,
-        tipologia: "BA"
-    }
-    
-]
+export interface Bevande{
+    rows: Array<IBevande>;
+}

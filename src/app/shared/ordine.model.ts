@@ -4,8 +4,8 @@ export interface IOrdine{
     totale: number;
     nomeCliente: string;
     consegnaDomicilio: boolean;
+    asporto: boolean;
     citta: string;
-    cap: number;
     indirizzo: string;
     citofono: string;
     internoScala?: string;
@@ -14,7 +14,6 @@ export interface IOrdine{
     orario: string;
     note?: string;
     allergie?: boolean;
-    noteAllergie?: string;
 }
 
 export interface IProdotto{
@@ -25,6 +24,8 @@ export interface IProdotto{
     opzioni: IOpzioni[];
     isMenu : Boolean;
     showOpzioni: Boolean;
+    quantita?: number;
+    tipo?: string;
 }
 
 
@@ -32,7 +33,7 @@ export interface IOpzioni{
     id: number;
     nomeOpzione: string;
     opzioneSelezionata?: string;
-    priorita:number;
+    priorita?:number;
     prezzo: number;
     quantita?: number;
 }

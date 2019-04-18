@@ -17,7 +17,7 @@ import { Component } from '@angular/core';
             <div class="col-md-4 col-sm-4 alergy-alert">
                 <hr>
                 <div class="row">
-                  <div class="col-md-1 col-sm-1"><i class="fa fa-exclamation-triangle fa-2x"></i></div>
+                  <div class="col-md-1 col-sm-1"><i class="fas fa-exclamation-triangle fa-2x"></i></div>
                   <div class="col-md-11 col-sm-11">
                   <p>Se hai un'allergia o un'intolleranza alimentare (o se una persona per la quale stai effettuando un ordine ne ha) indicacelo nelle note a fine acquisto
                   </p>

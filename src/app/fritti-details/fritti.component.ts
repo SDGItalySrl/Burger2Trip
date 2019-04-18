@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from '../common/toastr.service';
 import { Prodotto, OrdineService } from '../shared/ordini.service';
+import { FrittiService, Fritti } from '../shared/fritti.service';
+import { IFritti } from '../shared/fritti.model';
 
 @Component({
     selector: 'fritti-details',
@@ -9,25 +11,31 @@ import { Prodotto, OrdineService } from '../shared/ordini.service';
 })
 
 export class FrittiDetailComponent{
-    fritti : any[];
-    constructor(private route: ActivatedRoute,
-                private toastr: ToastrService,
-                private ordine: OrdineService){ }
+    fritti: Array<IFritti>;
+    
+    constructor(private toastr: ToastrService,
+                private ordine: OrdineService,
+                private frittiService: FrittiService){ }
 
     ngOnInit(){
-        this.fritti = this.route.snapshot.data['fritti'];
+        this.frittiService.getFritti().subscribe(
+              (data: Fritti) => {this.fritti = data.rows},
+              (err: any) => console.log(err)
+            );
     }
 
     aggiungiProdotto(objFritto){
         try {
             let prodotto:Prodotto = {
-                id: objFritto.id,
+                id: parseInt(objFritto.id),
                 nome: objFritto.nome,
-                prezzo: objFritto.prezzo,
+                prezzo: parseFloat(objFritto.prezzo),
                 priorita: 2,
                 isMenu: false,
                 showOpzioni: false,
-                opzioni: undefined                
+                opzioni: undefined,
+                quantita: undefined,
+                tipo: "fritto"        
             }
             let res: boolean = this.ordine.inserisciProdotto(prodotto);
             if(res)
