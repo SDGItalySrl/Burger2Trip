@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OrdineService } from '../shared/ordini.service';
+import { PrinterService } from '../shared/printer.service'; 
+
+declare var qz: any;
 
 @Component({
     selector: "user",
@@ -11,6 +14,12 @@ import { OrdineService } from '../shared/ordini.service';
 })
 
 export class UtenteComponent{
+
+    printer = {
+        host: '172.31.5.200',
+        port: '9100'
+    }
+    
     formInfoUtente: FormGroup;
     nome: string;
     indirizzo: string;
@@ -24,7 +33,8 @@ export class UtenteComponent{
     consegnaDomicilio: boolean;
     asporto: boolean;
 
-    constructor(private ordineService: OrdineService){ }
+    constructor(private ordineService: OrdineService,
+                private printerService: PrinterService){ }
 
     ngOnInit(){
 
@@ -67,6 +77,15 @@ export class UtenteComponent{
             this.formInfoUtente.get('orario').validator = <any>Validators.compose([Validators.required]);
         } 
         this.formInfoUtente.get('nome').updateValueAndValidity();
+
+        //this.printerService.print();
+        // this.printerService.getPrinter(this.printer).subscribe(
+        //     data => {
+        //         console.log(data);                
+        //         this.print()
+        //     },
+        //     err => console.log(err)
+        // );
     }
 
     /**
@@ -75,7 +94,9 @@ export class UtenteComponent{
      */
     completaOrdine(formValues){
         try {
-            this.ordineService.completaOrdine(formValues)
+            //this.ordineService.completaOrdine(formValues);
+            this.printerService.print(this.ordineService.ordine)
+
         } 
         catch (error) {
             console.log(error)    

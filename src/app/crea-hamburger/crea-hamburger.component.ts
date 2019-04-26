@@ -192,6 +192,7 @@ const prezzoHamburger: number = 4.5;
 // Inizializzo questa costante che si trova nel servizio crea-hamburger.service.ts anche in questo componente perche 
 // utilizzanto route.snapshot.data nel ngOnInit dopo che l'array venisse popolato in qualche modo era collegato con 
 // listaOpzioniSelezionate e alla modifica di una veniva modificata anche l'altra
+///////////L'ORDINE IN CUI VIENE POPOLATO DEVE ESSERE UGUALE A QUELLO DEL FOGLIO DI GOOGLE///////////
 const listOpzioniPulita: Array<IOpzioni> = [
     {
         id: 1,

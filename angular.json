@@ -31,7 +31,10 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/toastr/build/toastr.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/rsvp/dist/rsvp.min.js",
+              "node_modules/sha.js/sha256.js",
+              "node_modules/qz-tray/qz-tray.js"
             ],
             "es5BrowserSupport": true
           },

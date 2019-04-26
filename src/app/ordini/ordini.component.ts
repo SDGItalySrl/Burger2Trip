@@ -110,11 +110,11 @@ export class OrdineComponent{
         return res;
     }
 
-   /**
-    * Reindirizza l'utente alla pagina Utente per completare l'ordine inserendo l'informazione sul cliente
-    */
-   completaOrdine(){
-       this.router.navigate(['/utente']);
-   }
+    /**
+        * Reindirizza l'utente alla pagina Utente per completare l'ordine inserendo l'informazione sul cliente
+        */
+    completaOrdine(){
+        this.router.navigate(['/utente']);
+    }
 
 }
