@@ -6,30 +6,6 @@ import * as qz from 'qz-tray';
 import { sha256 } from 'js-sha256';
 import { Ordine } from './ordini.service';
 
-qz.security.setCertificatePromise((resolve, reject) => {
-  fetch("assets/certificate.pem", {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
-   .then(data => resolve(data.text()));
- });
- 
- qz.security.setSignaturePromise(hash => {
-  return (resolve, reject) => {
-      var pk = KEYUTIL.getKey(privateKey);
-      var sig = new KJUR.crypto.Signature({"alg": "SHA1withRSA"});
-      sig.init(pk);
-      sig.updateString(hash);
-      var hex = sig.sign();
-      console.log(privateKey)
-      console.log(hash)
-      console.log(hex)
-      resolve(stob64(hextorstr(hex)));
-   };
- });
-
-qz.api.setSha256Type(data => sha256(data));
-qz.api.setPromiseType(resolver => new Promise(resolver));
-
-qz.websocket.connect({host: "172.31.5.25"}).then(console.log("connesso alla stampante"));
-
 @Injectable({
   providedIn: 'root'
 })
@@ -37,6 +13,33 @@ export class PrinterService {
     cfg: any;
   //npm install qz-tray js-sha256 rsvp --save
 
+  constructor(){
+    qz.security.setCertificatePromise((resolve, reject) => {
+      fetch("assets/certificate.pem", {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
+      .then(data => resolve(data.text()));
+    });
+    
+    qz.security.setSignaturePromise(hash => {
+      return (resolve, reject) => {
+          var pk = KEYUTIL.getKey(privateKey);
+          var sig = new KJUR.crypto.Signature({"alg": "SHA1withRSA"});
+          sig.init(pk);
+          sig.updateString(hash);
+          var hex = sig.sign();
+          console.log(privateKey)
+          console.log(hash)
+          console.log(hex)
+          resolve(stob64(hextorstr(hex)));
+      };
+    });
+    
+    qz.api.setSha256Type(data => sha256(data));
+    qz.api.setPromiseType(resolver => new Promise(resolver));
+    
+    qz.websocket.connect({host: "172.31.5.25"}).then(console.log("connesso alla stampante"));
+ }
+  
+  
   // Get the SPECIFIC connected printer
   getPrinter(objPrinter: any): Observable<string> {
     
