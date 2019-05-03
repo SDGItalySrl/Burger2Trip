@@ -19,11 +19,12 @@ export interface IOrdine{
 export interface IProdotto{
     id: number;
     nome: string;
+    prezzoBase: number;
     prezzo: number;
     priorita: number;
     opzioni: IOpzioni[];
-    isMenu : Boolean;
-    showOpzioni: Boolean;
+    isMenu : boolean;
+    showOpzioni: boolean;
     quantita?: number;
     tipo?: string;
 }
@@ -36,4 +37,6 @@ export interface IOpzioni{
     priorita?:number;
     prezzo: number;
     quantita?: number;
+    tipo? : string; 
+    valueQuantita?: string; //quantita positiva o negativa P: positivio. N: Negativo
 }

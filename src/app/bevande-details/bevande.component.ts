@@ -29,6 +29,7 @@ export class BevandeDetailComponent{
             let prodotto: Prodotto = {
                 id: parseInt(objBevanda.id),
                 nome: objBevanda.nome,
+                prezzoBase: parseFloat(objBevanda.prezzo),
                 prezzo: parseFloat(objBevanda.prezzo),
                 priorita: 3,
                 isMenu: false,

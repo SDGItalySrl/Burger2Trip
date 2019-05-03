@@ -5,6 +5,7 @@ import { ToastrService } from '../common/toastr.service';
 import { CreaHamburgerService, Ingredienti } from '../shared/crea-hamburger.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IOpzioni } from '../shared/ordine.model';
+import { HamburgerService } from '../shared/hamburger.service';
 
 @Component({
     selector: 'crea-hamburger',
@@ -24,7 +25,8 @@ export class CreaHamburgerComponent{
     constructor(private route: ActivatedRoute,
         private toastr: ToastrService,
         private ordine: OrdineService,
-        private creaHamburgerService : CreaHamburgerService){ }
+        private creaHamburgerService : CreaHamburgerService,
+        private hamburgerService: HamburgerService){ }
 
     ngOnInit(){
        // this.listaOpzioniSelezionate = this.route.snapshot.data['ingredienti'];
@@ -43,7 +45,8 @@ export class CreaHamburgerComponent{
 
             this.prodotto.id = undefined;
             this.prodotto.nome= undefined;
-            this.prodotto.prezzo = prezzoHamburger;
+            this.prodotto.prezzoBase = undefined;
+            this.prodotto.prezzo = 0;
             this.prodotto.tipo = "crea-hamburger";
             this.prodotto.priorita = 1;
             this.prodotto.isMenu = false;
@@ -70,7 +73,9 @@ export class CreaHamburgerComponent{
                     opzioneSelezionata: objIngrediente.nomeOpzione,
                     priorita: 1,
                     prezzo: parseFloat(objIngrediente.prezzo),
-                    quantita: parseFloat(objIngrediente.quantita) + 1
+                    quantita: parseFloat(objIngrediente.quantita) + 1,
+                    tipo: 'ingrediente-extra',
+                    valueQuantita: "P"
                 });            
                 //Aggiorno anche la lista che viene utilizzata per mostrare i dati sulla page
                 this.listaOpzioniSelezionate[indexIngrediente].quantita = parseFloat(objIngrediente.quantita) + 1;
@@ -119,26 +124,13 @@ export class CreaHamburgerComponent{
 
     }
     /**
-     * Calcola il prezzo totale per il prodotto 
-     */
-    calcolaPrezzoTot(){
-        try {
-            for (let i = 0; i < this.prodotto.opzioni.length; i++) {
-                this.prezzoTotOpzioni += this.prodotto.opzioni[i].prezzo;
-            }
-        } 
-        catch (error) {
-            console.log(error);
-        }
-        
-    }
-    /**
      * Invia l'oggetto prodotto al componente Ordine
      * @value tipoHamburger
      */
     aggiornaOrdine(value){
-        this.calcolaPrezzoTot();
+        this.prezzoTotOpzioni = this.hamburgerService.calcoloPrezzoTotale(this.prodotto);
         this.prodotto.prezzo = this.prezzoTotOpzioni + prezzoHamburger;
+        this.prodotto.prezzoBase = prezzoHamburger;
         this.prodotto.nome = value.tipoHamburger;
         if(this.ordine.inserisciProdotto(this.prodotto)){ //inserisco il prodotto chiamando il servizio ordine
             this.toastr.success("Proddotto aggiunto correttamente");
@@ -150,7 +142,6 @@ export class CreaHamburgerComponent{
         else
             this.toastr.error("Qualcosa è andato storto, contattare l'amministratore");
     }
-
     /**
      * Dopo l'inserimento del prodotto all'ordine reimposta l'oggetto 
      * prodotto e listaOpzioniSelezionate con le imformazioni di default
@@ -160,7 +151,8 @@ export class CreaHamburgerComponent{
             this.prodotto = new Prodotto();
             this.prodotto.id = undefined;
             this.prodotto.nome= undefined;
-            this.prodotto.prezzo = prezzoHamburger;
+            this.prodotto.prezzoBase = undefined;
+            this.prodotto.prezzo = 0;
             this.prodotto.priorita = 1;
             this.prodotto.isMenu = false;
             this.prodotto.showOpzioni = false;
@@ -178,7 +170,6 @@ export class CreaHamburgerComponent{
     
 }
     }
-
     /**
      * Ritorna la posizione dell'opzione nella lista pulita delle opzioni 
      * @param id idOpzione

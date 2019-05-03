@@ -44,8 +44,7 @@ export class OrdineService{
                 prodotto.id = nextId;
                 this.ordine.prodotti.push(prodotto);
             }
-            else
-            {
+            else{
                 if(!this.productExists(prodotto.nome)){
                     prodotto.id = nextId;
                     this.ordine.prodotti.push(prodotto);
@@ -95,20 +94,23 @@ export class OrdineService{
      */
     eliminaOpzioniProdotto(idProdotto: number, idOpzione: number){
         try {
-            //Ricavo l'indice dell'opzione attraverso l'id opzione
-            var indiceOpzione = this.ordine.prodotti[idProdotto].opzioni.map(function(opzione) {return opzione.id;}).indexOf(idOpzione);
+            //Ricavo l'indice dell'opzione e prodotto attraverso i loro id
+            var indiceProdotto = this.ordine.prodotti.map(function(prodotto) {return prodotto.id;}).indexOf(idProdotto);
+            var indiceOpzione = this.ordine.prodotti[indiceProdotto].opzioni.map(function(opzione) {return opzione.id;}).indexOf(idOpzione);
             
             //Aggiorno il prezzo del prodotto se l'utente elimina l'opzione "Doppio Hamburger"
             //che costa +€2.50 
-            if(indiceOpzione == 1 && this.ordine.prodotti[idProdotto].opzioni[indiceOpzione].opzioneSelezionata == "Doppio Hamburger"){
-                this.ordine.prodotti[idProdotto].prezzo = 
-                    this.ordine.prodotti[idProdotto].prezzo - this.ordine.prodotti[idProdotto].opzioni[indiceOpzione].prezzo;
+            if(this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].opzioneSelezionata == "Doppio Hamburger"){
+                this.ordine.prodotti[indiceProdotto].prezzo = 
+                    this.ordine.prodotti[indiceProdotto].prezzo - this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].prezzo;
             }
-            if(this.ordine.prodotti[idProdotto].tipo == "crea-hamburger"){
-                this.ordine.prodotti[idProdotto].prezzo -= this.ordine.prodotti[idProdotto].opzioni[indiceOpzione].prezzo;
-            }
+            //Eliminazione dei singoli ingredienti + aggionamento del prezzo per il HamburgerOptionsModalComponent e CreaHamburgerComponent
+            if(this.ordine.prodotti[indiceProdotto].tipo == "crea-hamburger" ||
+                this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].valueQuantita == "P")
+                    this.ordine.prodotti[indiceProdotto].prezzo -= this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].prezzo;
 
-            this.ordine.prodotti[idProdotto].opzioni.splice(indiceOpzione, 1);
+
+            this.ordine.prodotti[indiceProdotto].opzioni.splice(indiceOpzione, 1);
             //Aggiorno la lista dei prodotti per la ordini.component
             this.ordineListProdotti.next(this.ordine.prodotti);
             this.calcoloPrezzoTotale();  // ricalcola il prezzoTotale
@@ -127,13 +129,14 @@ export class OrdineService{
         var res = false;
         try {
             for (let i = 0; i < this.ordine.prodotti.length; i++) {
-                if(this.ordine.prodotti[i].tipo == "bevanda" || this.ordine.prodotti[i].tipo == "fritto"){
+                if(this.ordine.prodotti[i].tipo == "bevanda" || this.ordine.prodotti[i].tipo == "fritto" || this.ordine.prodotti[i].tipo == "OPMenu"){
                     if(this.ordine.prodotti[i].nome === nomeProdotto){                        
                         if(this.ordine.prodotti[i].quantita == undefined)
                             this.ordine.prodotti[i].quantita = 1
 
                         this.ordine.prodotti[i].quantita = this.ordine.prodotti[i].quantita + 1;
-                        this.ordine.prodotti[i].prezzo = this.ordine.prodotti[i].prezzo * this.ordine.prodotti[i].quantita;
+                        if(this.ordine.prodotti[i].tipo != "OPMenu")
+                            this.ordine.prodotti[i].prezzo = this.ordine.prodotti[i].prezzo * this.ordine.prodotti[i].quantita;
                         res = true;
                     }
                 }
@@ -143,13 +146,6 @@ export class OrdineService{
             console.log(error.message)    
         }
         return res;
-    }
-
-    /**
-     * Ritorna l'ordine salvato in locale
-     */
-    getOrdine(): Ordine{
-        return this.ordine;
     }
 
     /**
@@ -197,6 +193,14 @@ export class OrdineService{
             console.log(error)
         }
     }
+
+    reimpostaOrdine(){
+        this.ordine = new Ordine();
+        this.ordineListProdotti = new BehaviorSubject(this.ordine.prodotti);
+        this.prezzoTotale = new BehaviorSubject<number>(this.ordine.totale);
+        this.consegnaDomicilio = new BehaviorSubject<boolean>(this.ordine.consegnaDomicilio);
+        this.asporto = new BehaviorSubject<boolean>(this.ordine.asporto);
+    }
 }
 export class Ordine implements IOrdine {
     prodotti?: Prodotto[];
@@ -221,6 +225,7 @@ export class Ordine implements IOrdine {
 export class Prodotto implements IProdotto{
     id: number;
     nome: string;
+    prezzoBase: number;
     prezzo: number;
     priorita: number;    
     opzioni: Opzioni[];
@@ -239,4 +244,6 @@ export class Opzioni implements IOpzioni{
     priorita?:number;
     prezzo: number;
     quantita?:number;
+    tipo? : string;
+    valueQuantita?: string; //quantita positiva o negativa. P: positivio. N: Negativo
 }

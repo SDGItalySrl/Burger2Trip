@@ -29,6 +29,7 @@ export class FrittiDetailComponent{
             let prodotto:Prodotto = {
                 id: parseInt(objFritto.id),
                 nome: objFritto.nome,
+                prezzoBase: parseFloat(objFritto.prezzo),
                 prezzo: parseFloat(objFritto.prezzo),
                 priorita: 2,
                 isMenu: false,
@@ -42,7 +43,7 @@ export class FrittiDetailComponent{
                 this.toastr.success("Prodotto aggiunto all'ordine");
         } 
         catch (error) {
-            
+            console.log(error)    
         }
     }
 }

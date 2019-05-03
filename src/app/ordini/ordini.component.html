@@ -26,8 +26,11 @@
                             {{prodotto.nome}} 
                         </h6>
                     </div>
-                    <div class="col-md-3 col-sm-3 p-0">
+                    <div *ngIf="prodotto.tipo!='OPMenu'" class="col-md-3 col-sm-3 p-0">
                         <h6 class="order-detail-font"> {{prodotto.prezzo | currency: 'EUR':'symbol':'1.2-2'}} </h6>
+                    </div>
+                    <div *ngIf="prodotto.tipo == 'OPMenu'" class="col-md-3 col-sm-3 p-0">
+                        &nbsp;
                     </div>
                     <div class="col-md-1 col-sm-1 p-0 delete" (click)="eliminaProdotto(prodotto.id)">
                         <i class="fas fa-trash order-detail-font"></i>
@@ -41,8 +44,14 @@
                             <p class="col-md-8 col-sm-8 opzioni-details"> 
                                 {{opzioni.opzioneSelezionata}}
                             </p>
-                            <p class="col-md-3 col-sm-3 opzioni-details"> 
+                            <p class="col-md-3 col-sm-3 opzioni-details" *ngIf="opzioni.valueQuantita == 'P'"> 
                                 {{opzioni.prezzo | currency: 'EUR':'symbol':'1.2-2'}}
+                            </p>
+                            <p class="col-md-3 col-sm-3 opzioni-details" *ngIf="opzioni.valueQuantita!='P' && opzioni.valueQuantita!='N'"> 
+                                {{opzioni.prezzo | currency: 'EUR':'symbol':'1.2-2'}}
+                            </p>
+                            <p class="col-md-3 col-sm-3 opzioni-details" *ngIf="opzioni.valueQuantita == 'N'"> 
+                                &nbsp;
                             </p>
                             <p class="col-md-1 col-sm-1 delete p-0" (click)="eliminaOpzione(prodotto.id, opzioni.id)"> 
                                 <i class="fa fa-trash "></i>

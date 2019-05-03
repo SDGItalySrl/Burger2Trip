@@ -33,6 +33,25 @@ export class HamburgerService{
             console.log(error);
         }
     }
+
+    /**
+     * Calcolo il prezzo totale per il componente hamburger contenente ingredienti con quantita sia positiva che negativa
+     * @param objProdotto oggetto prodotto
+     */
+    calcoloPrezzoHamburger(objProdotto){
+        try {
+            objProdotto.prezzo = 0;
+            for (let index = 0; index < objProdotto.opzioni.length; index++) {
+                if(objProdotto.opzioni[index].prezzo != undefined && objProdotto.opzioni[index].valueQuantita != "N"){
+                    objProdotto.prezzo += objProdotto.opzioni[index].prezzo; 
+                }
+            }
+            return objProdotto.prezzo; 
+        } 
+        catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 export interface Hamburger{

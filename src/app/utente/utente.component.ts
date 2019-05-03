@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OrdineService } from '../shared/ordini.service';
 import { PrinterService } from '../shared/printer.service'; 
+import { ToastrService } from '../common/toastr.service';
 
 declare var qz: any;
 
@@ -19,7 +20,6 @@ export class UtenteComponent{
         host: '172.31.5.200',
         port: '9100'
     }
-    
     formInfoUtente: FormGroup;
     nome: string;
     indirizzo: string;
@@ -34,7 +34,8 @@ export class UtenteComponent{
     asporto: boolean;
 
     constructor(private ordineService: OrdineService,
-                private printerService: PrinterService){ }
+                private printerService: PrinterService,
+                private toastr: ToastrService,){ }
 
     ngOnInit(){
 
@@ -94,12 +95,22 @@ export class UtenteComponent{
      */
     completaOrdine(formValues){
         try {
-            //this.ordineService.completaOrdine(formValues);
-            this.printerService.print(this.ordineService.ordine)
+            this.ordineService.completaOrdine(formValues);
+            if(this.printerService.print(this.ordineService.ordine)){
+                this.reimpostaOrdine();
+                this.toastr.success("Ordine stampato!");
+            }
+            else
+                this.toastr.error("Qualcosa è andato storto, contattare l'amministratore");
 
         } 
         catch (error) {
             console.log(error)    
         }
+    }
+
+    reimpostaOrdine(){
+        this.formInfoUtente.reset();
+        this.ordineService.reimpostaOrdine();
     }
 }

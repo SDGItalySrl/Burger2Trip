@@ -26,6 +26,26 @@
                 </mat-select>
                 <mat-error *ngIf="bibita.hasError('required')">Required</mat-error>
         </mat-form-field>
+
+        <label id="hamburger-ingredienti-label">Ingredienti</label>
+        <mat-list>
+            <mat-list-item *ngFor="let opzione of listaOpzioniSelezionate">
+                <h4 mat-line>{{opzione.nomeOpzione}}
+                        <span *ngIf="opzione.quantita!=0" 
+                                matBadge="{{opzione.quantita}}" matBadgeOverlap="false"
+                                matBadgePosition="before"
+                                matBadgeColor="accent" ></span>
+                </h4>                                            
+                <button class="btn" type="button"
+                    (click)="aggiungiOpzione(opzione)">
+                        <i class="fa fa-plus"></i>
+                </button>
+                <button class="btn ml-4" type="button"
+                    (click)="rimuoviOpzione(opzione)">
+                        <i class="fa fa-minus"></i>
+                </button>
+            </mat-list-item>
+        </mat-list> 
 </div>
 </mat-dialog-content>
 <mat-dialog-actions>

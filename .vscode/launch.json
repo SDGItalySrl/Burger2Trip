@@ -8,6 +8,7 @@
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome",
+      // "url": "http://ordini.burger2Trip.it:4200",
       "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}"
     }

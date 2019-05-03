@@ -78,8 +78,9 @@ export class OrdineComponent{
      */
     showHideOpzioni(id:number){
         try{
-            (this.ordineList.prodotti[id].showOpzioni == true) ? 
-                this.ordineList.prodotti[id].showOpzioni = false : this.ordineList.prodotti[id].showOpzioni = true;
+            var indiceOrdine = this.ordineList.prodotti.map(function(ordine) {return ordine.id;}).indexOf(id);
+            (this.ordineList.prodotti[indiceOrdine].showOpzioni == true) ? 
+                this.ordineList.prodotti[indiceOrdine].showOpzioni = false : this.ordineList.prodotti[indiceOrdine].showOpzioni = true;
         }
         catch(error){
             console.log(error);
@@ -111,7 +112,7 @@ export class OrdineComponent{
     }
 
     /**
-        * Reindirizza l'utente alla pagina Utente per completare l'ordine inserendo l'informazione sul cliente
+        * Reindirizza l'utente al UtenteComponent per completare l'ordine inserendo l'informazione sul cliente
         */
     completaOrdine(){
         this.router.navigate(['/utente']);
