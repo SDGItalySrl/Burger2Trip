@@ -12,12 +12,12 @@
                                             <div class="product-title">
                                                 <h5>{{fritto.nome}}</h5>
                                             </div>
-                                            <p *ngIf="fritto?.quantita">{{fritto.quantita}}</p>
+                                            <p *ngIf="fritto?.quantita">Quantità: {{fritto.quantita}}</p>
                                         </div>
-                                        <div class="col-md-2 col-sm-2">
+                                        <div class="col-md-2 col-sm-3">
                                             <p>{{fritto.prezzo | currency: 'EUR':'symbol':'1.2-2'}}</p>
                                         </div>
-                                        <div class="col-md-2 col-sm-2">
+                                        <div class="col-md-2 col-sm-1">
                                             <button class="btn" (click)="aggiungiProdotto(fritto)">
                                                     <i class="fa fa-plus"></i>
                                             </button>

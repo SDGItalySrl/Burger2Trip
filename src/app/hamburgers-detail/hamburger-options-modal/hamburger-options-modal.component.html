@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>{{titoloDialog}}</h2>
-<form [formGroup]="opzioniForm" (ngSubmit)="salvaProdotto()">
+<form [formGroup]="opzioniForm" (ngSubmit)="salvaProdotto(opzioniForm.value)">
 <mat-dialog-content>
 <div class="example-container">   
         <mat-form-field>
@@ -54,6 +54,6 @@
         </button>
         <button mat-button (click)="chiudi()" color="basic" type="button">
                 <i class="fa fa-times"></i> Cancel
-        </button>     
+        </button>
 </mat-dialog-actions>
 </form>   

@@ -133,10 +133,10 @@ export class OrdineService{
                     if(this.ordine.prodotti[i].nome === nomeProdotto){                        
                         if(this.ordine.prodotti[i].quantita == undefined)
                             this.ordine.prodotti[i].quantita = 1
-
+                            
                         this.ordine.prodotti[i].quantita = this.ordine.prodotti[i].quantita + 1;
                         if(this.ordine.prodotti[i].tipo != "OPMenu")
-                            this.ordine.prodotti[i].prezzo = this.ordine.prodotti[i].prezzo * this.ordine.prodotti[i].quantita;
+                            this.ordine.prodotti[i].prezzo = this.ordine.prodotti[i].prezzoBase * this.ordine.prodotti[i].quantita;
                         res = true;
                     }
                 }
@@ -158,7 +158,10 @@ export class OrdineService{
                 this.ordine.totale += this.ordine.prodotti[index].prezzo;
             }
             //Aggiungo il costo di consegna al prezzo totale se il flag consegna domicilio è checkato
-            (this.ordine.consegnaDomicilio == true) ? this.ordine.totale += 3 : this.ordine.totale;
+            if(this.ordine.totale > 20)
+                (this.ordine.consegnaDomicilio == true) ? this.ordine.totale += 1 : this.ordine.totale;
+            else
+                (this.ordine.consegnaDomicilio == true) ? this.ordine.totale += 3 : this.ordine.totale;
             this.prezzoTotale.next(this.ordine.totale);
         } 
         catch (error) {

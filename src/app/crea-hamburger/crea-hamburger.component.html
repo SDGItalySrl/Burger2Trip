@@ -8,16 +8,31 @@
                         <div class="row card">
                             <div class="col-md-12 col-sm-12  mb-2">                                
                                    <label id="crea-hamburger-label">Tipo Hamburger</label>
-                                     <mat-radio-group
-                                        aria-labelledby="crea-hamburger-label" class="radio-group" 
-                                        formControlName="tipoHamburger"
+                                     <mat-radio-group aria-labelledby="crea-hamburger-label" class="radio-group" formControlName="tipoHamburger"
                                         (ngModel)="tipoHamburger" name="tipoHamburger" required>
                                         <mat-radio-button class="radio-button" [class.error]="creaForm.controls.tipoHamburger?.invalid && creaForm.controls.tipoHamburger?.touched" *ngFor="let tipo of tipi" [value]="tipo">
                                             {{tipo}}
                                         </mat-radio-button>
                                         <em *ngIf="creaForm.controls.tipoHamburger?.invalid && creaForm.controls.tipoHamburger?.touched" class="error">Seleziona il Tipo Hamburger</em>
                                     </mat-radio-group>
-                                    
+
+                                    <label id="crea-hamburger-label">Opzioni</label> 
+                                    <mat-radio-group aria-labelledby="crea-hamburger-label" class="radio-group" formControlName="opzione" (ngModel)="option" name="opzione">
+                                        <mat-radio-button class="radio-button" *ngFor="let opzione of opzioni" [value]="opzione">
+                                            {{opzione}}
+                                        </mat-radio-button>
+                                    </mat-radio-group>
+
+                                    <mat-form-field>
+                                            <mat-select formControlName="bibita" id="bibita" placeholder="Bibita" required 
+                                                     disabled="creaForm.controls.opzione?.value == 'Singolo'">
+                                                    <mat-option value="Coca Cola 33cl">Coca Cola 33cl</mat-option>
+                                                    <mat-option value="Fanta 33cl">Fanta 33cl</mat-option>
+                                                    <mat-option value="Sprite 33cl">Sprite 33cl</mat-option>
+                                                    <mat-option value="Coca Cola Zero">Coca Cola Zero 33cl</mat-option>
+                                            </mat-select>
+                                    </mat-form-field>
+                                    <br>
                                     <label id="crea-hamburger-label">Ingredienti</label>
                                     <mat-list>
                                         <mat-list-item *ngFor="let opzione of listaOpzioniSelezionate">

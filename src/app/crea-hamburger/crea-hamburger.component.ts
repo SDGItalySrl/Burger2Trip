@@ -6,6 +6,7 @@ import { CreaHamburgerService, Ingredienti } from '../shared/crea-hamburger.serv
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IOpzioni } from '../shared/ordine.model';
 import { HamburgerService } from '../shared/hamburger.service';
+import { controlNameBinding } from '@angular/forms/src/directives/reactive_directives/form_control_name';
 
 @Component({
     selector: 'crea-hamburger',
@@ -15,9 +16,9 @@ import { HamburgerService } from '../shared/hamburger.service';
 export class CreaHamburgerComponent{
     creaForm: FormGroup
     @Input() required: Boolean;
-    tipoHamburger: string;
     listaOpzioniSelezionate: Array<IOpzioni>;
     tipi: string[] = ['Hamburger Vegetariano', 'Pane e Carne', 'Pane e Cotoletta di pollo'];
+    opzioni: string[] = ['Singolo', 'Menu'];
     prezzoTotOpzioni: number = 0;
     prodotto: Prodotto;
     ingredienti: Opzioni;
@@ -36,9 +37,18 @@ export class CreaHamburgerComponent{
         );
 
         let tipoHamburger = new FormControl("", Validators.required);
+        let opzione = new FormControl("");
+        let bibita = new FormControl({disabled: true, value: 'Singolo'}, Validators.required);
+        
         this.creaForm = new FormGroup({
-            tipoHamburger: tipoHamburger
+            tipoHamburger: tipoHamburger,
+            opzione: opzione,
+            bibita: bibita
         })
+
+        opzione.valueChanges.subscribe(value => {
+            (value == "Menu") ? bibita.enable() : bibita.disable()
+        });
 
         if(this.prodotto == undefined){
             this.prodotto = new Prodotto();
@@ -55,6 +65,7 @@ export class CreaHamburgerComponent{
             
         }
     }
+
     /**
      * Inserisce l'ingrediente nell'oggetto prodotto
      * @param ObjIngrediente 
@@ -123,6 +134,49 @@ export class CreaHamburgerComponent{
         }
 
     }
+
+    aggiungiPatatineMenu(){
+        try {
+            let prodotto:Prodotto = {
+                id: undefined,
+                nome: 'Patatine - Menu',
+                prezzoBase: 0,
+                prezzo: 0,
+                priorita: 2,
+                isMenu: false,
+                showOpzioni: false,
+                opzioni: undefined,
+                quantita: undefined,
+                tipo: "OPMenu"//opzione menu 
+            }
+            let res: boolean = this.ordine.inserisciProdotto(prodotto);
+        } 
+        catch (error) {
+            console.log(error)    
+        }
+    }
+
+    aggiungiBibitaMenu(nomeBibita: string){
+        try {
+            let prodotto:Prodotto = {
+                id: undefined,
+                nome: nomeBibita + ' - Menu',
+                prezzoBase: 0,
+                prezzo: 0,
+                priorita: 3,
+                isMenu: false,
+                showOpzioni: false,
+                opzioni: undefined,
+                quantita: undefined,
+                tipo: "OPMenu" //opzione menu
+            }
+            let res: boolean = this.ordine.inserisciProdotto(prodotto);
+        } 
+        catch (error) {
+            console.log(error)    
+        } 
+    }
+
     /**
      * Invia l'oggetto prodotto al componente Ordine
      * @value tipoHamburger
@@ -132,6 +186,12 @@ export class CreaHamburgerComponent{
         this.prodotto.prezzo = this.prezzoTotOpzioni + prezzoHamburger;
         this.prodotto.prezzoBase = prezzoHamburger;
         this.prodotto.nome = value.tipoHamburger;
+        (value.opzione == 'Menu') ? this.prodotto.isMenu = true : this.prodotto.isMenu = false;
+        if(value.opzione == 'Menu'){
+            this.prodotto.prezzo += 3;
+            this.aggiungiBibitaMenu(value.bibita);
+            this.aggiungiPatatineMenu();
+        }
         if(this.ordine.inserisciProdotto(this.prodotto)){ //inserisco il prodotto chiamando il servizio ordine
             this.toastr.success("Proddotto aggiunto correttamente");
             setTimeout(() => {

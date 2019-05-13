@@ -90,47 +90,49 @@ export class HamburgerOptionsModalComponent{
     /**
      * Compone l'oggetto prodotto sul submit del from e salva il prodotto
      */
-    salvaProdotto(){
-            try {                
-                //converto i numeri da stringe a int
-                this.convertiDati();
+    salvaProdotto(formValues){
+            try {
+                if(this.data.isMenu && formValues.bibita != ""){
+                    //converto i numeri da stringe a int
+                    this.convertiDati();
 
-                this.prodotto.opzioni.push({
-                    id: 1,
-                    nomeOpzione: "Tipo Cottura",
-                    opzioneSelezionata : this.tipoCottura.value,
-                    priorita: 2,
-                    prezzo: undefined
-                },
-                {
-                    id: 2,
-                    nomeOpzione: "Opzione",
-                    opzioneSelezionata: this.opzione.value,
-                    priorita: 1,
-                    prezzo: (this.opzione.value == "Doppio Hamburger") ? 2.50 : 0,
-                });
+                    this.prodotto.opzioni.push({
+                        id: 1,
+                        nomeOpzione: "Tipo Cottura",
+                        opzioneSelezionata : this.tipoCottura.value,
+                        priorita: 2,
+                        prezzo: undefined
+                    },
+                    {
+                        id: 2,
+                        nomeOpzione: "Opzione",
+                        opzioneSelezionata: this.opzione.value,
+                        priorita: 1,
+                        prezzo: (this.opzione.value == "Doppio Hamburger") ? 2.50 : 0,
+                    });
 
-                if(this.data.isMenu){
-                    this.aggiungiPatatineMenu();
-                    this.aggiungiBibitaMenu(this.bibita.value);
+                    if(this.data.isMenu){
+                        this.aggiungiPatatineMenu();
+                        this.aggiungiBibitaMenu(this.bibita.value);
+                    }
+
+                    //calcolo il prezzo totale in base al tipo di hamburger selezionato (doppio hamburger o singolo)
+                    this.prezzoTotOpzioni = this.hamburgerService.calcoloPrezzoHamburger(this.prodotto);
+                    this.prodotto.prezzoBase = (this.data.isMenu == true) ? this.hamburger.prezzo_menu : this.hamburger.prezzo_singolo;
+                    this.prodotto.prezzo = this.prezzoTotOpzioni + ((this.data.isMenu == true) ? this.hamburger.prezzo_menu : this.hamburger.prezzo_singolo);
+                    
+                    if(this.ordine.inserisciProdotto(this.prodotto)){ //inserisco il prodotto chiamando il servizio ordine
+                        this.toastr.success("Proddotto aggiunto correttamente");
+                        setTimeout(() => {
+                            this.opzioniForm.reset();
+                            this.reimpostaOggetti();
+                        }, 200);
+                    }
+                    else
+                        this.toastr.error("Qualcosa è andato storto, contattare l'amministratore");
+
+                    this.dialogRef.close();
                 }
-
-                //calcolo il prezzo totale in base al tipo di hamburger selezionato (doppio hamburger o singolo)
-                this.prezzoTotOpzioni = this.hamburgerService.calcoloPrezzoHamburger(this.prodotto);
-                this.prodotto.prezzoBase = (this.data.isMenu == true) ? this.hamburger.prezzo_menu : this.hamburger.prezzo_singolo;
-                this.prodotto.prezzo = this.prezzoTotOpzioni + ((this.data.isMenu == true) ? this.hamburger.prezzo_menu : this.hamburger.prezzo_singolo);
-                console.log(this.prodotto)
-                if(this.ordine.inserisciProdotto(this.prodotto)){ //inserisco il prodotto chiamando il servizio ordine
-                    this.toastr.success("Proddotto aggiunto correttamente");
-                    setTimeout(() => {
-                        this.opzioniForm.reset();
-                        this.reimpostaOggetti();
-                    }, 200);
-                }
-                else
-                    this.toastr.error("Qualcosa è andato storto, contattare l'amministratore");
-
-                this.dialogRef.close();
         }
         catch (error) {
             console.log(error);

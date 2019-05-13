@@ -82,7 +82,7 @@ export class PrinterService {
       res = true;
     } 
     catch (error) {
-      console.log(error)
+      console.error(error)
     }
   return res;
   }
@@ -92,6 +92,9 @@ export class PrinterService {
  * @param objOrdine Oggetto Ordine
  */
   setDataToPrint(objOrdine: any){
+    var fritto: boolean = false;
+    var bibita: boolean = false;
+    var hamubrger: boolean = false;
     let c = 0;
     var data: any = [];
     console.log(objOrdine)
@@ -101,10 +104,11 @@ export class PrinterService {
       else if(objOrdine.asporto == true)
         data.push(objOrdine.nomeCliente + '                    ASPORTO');
       else if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != '')
-        data.push('                     EAT IN');
-      else
-        data.push(objOrdine.nomeCliente + '                    EAT IN');
+        data.push(objOrdine.nomeCliente + '                    EAT IN');      
     }
+    else
+        data.push(objOrdine.nomeCliente + '                    EAT IN');
+
     data.push('\n');
     data.push('\n');
     //SE DEVE ESSERE CONSEGNARE AGGIUNGO ALTRE INFORMAZIONI SUL CLIENTE
@@ -121,11 +125,15 @@ export class PrinterService {
       //CONTROLLOSE I PRODOTTO HANNO QUANTITA MAGGIORE DI 1 E STAMPO IN BASE A QUELLO
       if(objOrdine.prodotti[c].tipo == "fritto" && objOrdine.prodotti[c].quantita > 1 ||
             objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1)
-        data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + objOrdine.prodotti[c].prezzoBase + 'E\n');
+        data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + objOrdine.prodotti[c].prezzo + 'E\n');
       else if(objOrdine.prodotti[c].tipo ==  "OPMenu")
         data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + ' \n');
-      else
-        data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + objOrdine.prodotti[c].prezzoBase + ' E \n');
+      else{
+        if(objOrdine.prodotto.isMenu)
+          data.push('' + objOrdine.prodotti[c].nome + '- menu' + this.addBlankSpace(objOrdine.prodotti[c].nome.length + 6, 'prodotto') + objOrdine.prodotti[c].prezzoBase + ' E \n');
+        else
+          data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + objOrdine.prodotti[c].prezzoBase + ' E \n');
+      }
 
       if(objOrdine.prodotti[c].opzioni != undefined){
         for (var n= 0; n < objOrdine.prodotti[c].opzioni.length; n++) {
@@ -147,10 +155,18 @@ export class PrinterService {
         }
       }
       data.push('\n');
-      data.push('\n');
+      if(objOrdine.prodotti[c + 1].tipo == "fritto")
+        data.push('    ----------------------------------------    \n');
+      else if(objOrdine.prodotti[c + 1].tipo == "bibita")
+        data.push('    ----------------------------------------    \n');
+      else if(c==objOrdine.prodotti.length -1)
+        data.push('    ----------------------------------------    \n');
     }
     if(objOrdine.consegnaDomicilio == true)
-    data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + '3 E\n');
+    if(objOrdine.totale > 20)
+      data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + '1 E\n');
+    else
+      data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + '3 E\n');
     data.push('TOTALE EURO' + this.addBlankSpace(11, "prodotto") + objOrdine.totale + 'E\n');
     data.push('\n');
 
