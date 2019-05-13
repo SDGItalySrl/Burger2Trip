@@ -6,7 +6,6 @@ import * as qz from 'qz-tray';
 import { sha256 } from 'js-sha256';
 import { Ordine } from './ordini.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
