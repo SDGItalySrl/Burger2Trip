@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IHamburger } from 'src/app/shared/hamburger.model';
@@ -92,7 +92,7 @@ export class HamburgerOptionsModalComponent{
      */
     salvaProdotto(formValues){
             try {
-                if(this.data.isMenu && formValues.bibita != ""){
+                if(this.opzioniForm.valid){
                     //converto i numeri da stringe a int
                     this.convertiDati();
 
@@ -133,7 +133,7 @@ export class HamburgerOptionsModalComponent{
 
                     this.dialogRef.close();
                 }
-        }
+            }
         catch (error) {
             console.log(error);
         }

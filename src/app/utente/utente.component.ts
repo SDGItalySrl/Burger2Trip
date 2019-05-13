@@ -3,6 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OrdineService } from '../shared/ordini.service';
 import { PrinterService } from '../shared/printer.service'; 
 import { ToastrService } from '../common/toastr.service';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { StampaComanda } from './stampaComanda.component';
+import { OrdineComponent } from '../ordini/ordini.component';
 
 declare var qz: any;
 
@@ -35,7 +38,8 @@ export class UtenteComponent{
 
     constructor(private ordineService: OrdineService,
                 private printerService: PrinterService,
-                private toastr: ToastrService,){ }
+                private toastr: ToastrService,
+                public dialog: MatDialog){ }
 
     ngOnInit(){
 
@@ -78,15 +82,14 @@ export class UtenteComponent{
             this.formInfoUtente.get('orario').validator = <any>Validators.compose([Validators.required]);
         } 
         this.formInfoUtente.get('nome').updateValueAndValidity();
+    }
 
-        //this.printerService.print();
-        // this.printerService.getPrinter(this.printer).subscribe(
-        //     data => {
-        //         console.log(data);                
-        //         this.print()
-        //     },
-        //     err => console.log(err)
-        // );
+    openDialog(){
+        const ordine = this.ordineService.ordine;
+        const dialogRef = this.dialog.open(StampaComanda, {
+          width: '200px',
+          data: ordine
+        });
     }
 
     /**
@@ -111,6 +114,8 @@ export class UtenteComponent{
 
     reimpostaOrdine(){
         this.formInfoUtente.reset();
+        this.openDialog()
         this.ordineService.reimpostaOrdine();
     }
+
 }

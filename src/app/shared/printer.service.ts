@@ -91,9 +91,8 @@ export class PrinterService {
  * @param objOrdine Oggetto Ordine
  */
   setDataToPrint(objOrdine: any){
-    var fritto: boolean = false;
-    var bibita: boolean = false;
-    var hamubrger: boolean = false;
+    let fritto: boolean = false;
+    let bibita: boolean = false;
     let c = 0;
     var data: any = [];
     console.log(objOrdine)
@@ -122,16 +121,17 @@ export class PrinterService {
     data.push('\n');
     for (c; c < objOrdine.prodotti.length; c++) {
       //CONTROLLOSE I PRODOTTO HANNO QUANTITA MAGGIORE DI 1 E STAMPO IN BASE A QUELLO
-      if(objOrdine.prodotti[c].tipo == "fritto" && objOrdine.prodotti[c].quantita > 1 ||
-            objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1)
+      if(objOrdine.prodotti[c].tipo == "fritto" && objOrdine.prodotti[c].quantita > 1 || objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1)
         data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + objOrdine.prodotti[c].prezzo + 'E\n');
-      else if(objOrdine.prodotti[c].tipo ==  "OPMenu")
-        data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + ' \n');
+      else if(objOrdine.prodotti[c].tipo ==  "OPMenu" && objOrdine.prodotti[c].quantita > 1)
+        data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + ' \n');
       else{
-        if(objOrdine.prodotto.isMenu)
-          data.push('' + objOrdine.prodotti[c].nome + '- menu' + this.addBlankSpace(objOrdine.prodotti[c].nome.length + 6, 'prodotto') + objOrdine.prodotti[c].prezzoBase + ' E \n');
+        if(objOrdine.prodotti[c].isMenu)
+          data.push('' + objOrdine.prodotti[c].nome + ' - menu' + this.addBlankSpace(objOrdine.prodotti[c].nome.length + 7, 'prodotto') + objOrdine.prodotti[c].prezzoBase + ' E \n');
+        else if(objOrdine.prodotti[c].tipo ==  "OPMenu")
+          data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + '\n');
         else
-          data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + objOrdine.prodotti[c].prezzoBase + ' E \n');
+          data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto')  + objOrdine.prodotti[c].prezzoBase + ' E \n');
       }
 
       if(objOrdine.prodotti[c].opzioni != undefined){
@@ -154,20 +154,38 @@ export class PrinterService {
         }
       }
       data.push('\n');
-      if(objOrdine.prodotti[c + 1].tipo == "fritto")
-        data.push('    ----------------------------------------    \n');
-      else if(objOrdine.prodotti[c + 1].tipo == "bibita")
-        data.push('    ----------------------------------------    \n');
-      else if(c==objOrdine.prodotti.length -1)
-        data.push('    ----------------------------------------    \n');
+
+      if(objOrdine.prodotti[c + 1] != undefined){
+        if(fritto == false && objOrdine.prodotti[c + 1].tipo == "fritto"){
+        data.push('---------------------------------------------    \n');
+        fritto = true;
+        }
+        else if(bibita == false && objOrdine.prodotti[c + 1].tipo == "bevanda"){
+          data.push('---------------------------------------------    \n');
+          bibita = true;
+        }
+        else if(fritto == false && objOrdine.prodotti[c + 1].tipo == "OPMenu" ){
+          data.push('---------------------------------------------    \n');
+          fritto = true;
+        }
+        else if(bibita == false && objOrdine.prodotti[c + 1].tipo == "OPMenu" ){
+          data.push('---------------------------------------------    \n');
+          bibita = true;
+        }
+      }
+      else
+        data.push('---------------------------------------------    \n');
     }
-    if(objOrdine.consegnaDomicilio == true)
-    if(objOrdine.totale > 20)
-      data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + '1 E\n');
-    else
-      data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + '3 E\n');
-    data.push('TOTALE EURO' + this.addBlankSpace(11, "prodotto") + objOrdine.totale + 'E\n');
-    data.push('\n');
+
+      if(objOrdine.consegnaDomicilio == true){
+        if(objOrdine.totale > 20)
+          data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + '1 E\n');
+        else
+          data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + '3 E\n');
+      }
+      data.push('TOTALE EURO' + this.addBlankSpace(11, "prodotto") + objOrdine.totale + 'E\n');
+      data.push('\n');
+    
 
     return data;
   }

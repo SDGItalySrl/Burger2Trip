@@ -200,9 +200,13 @@ export class OrdineService{
     reimpostaOrdine(){
         this.ordine = new Ordine();
         this.ordineListProdotti = new BehaviorSubject(this.ordine.prodotti);
+        this.ordineListProdotti.next();
         this.prezzoTotale = new BehaviorSubject<number>(this.ordine.totale);
+        this.prezzoTotale.next();
         this.consegnaDomicilio = new BehaviorSubject<boolean>(this.ordine.consegnaDomicilio);
+        this.consegnaDomicilio.next();
         this.asporto = new BehaviorSubject<boolean>(this.ordine.asporto);
+        this.asporto.next();
     }
 }
 export class Ordine implements IOrdine {

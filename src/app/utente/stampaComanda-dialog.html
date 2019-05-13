@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Stampa comanda</h1>
+<div mat-dialog-content>
+  <p>Desideri stampare la comanda un'altra volta?</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No</button>
+  <button mat-button (click)="stampa()" cdkFocusInitial>Si</button>
+</div>

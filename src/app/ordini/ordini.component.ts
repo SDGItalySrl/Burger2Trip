@@ -118,4 +118,8 @@ export class OrdineComponent{
         this.router.navigate(['/utente']);
     }
 
+    reimpostaOrdine(){
+        this.ordineList = new Ordine();     
+    }
+
 }

@@ -43,6 +43,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HttpCacheService } from './shared/httpCacheService.service';
 import { CacheInterceptor } from './shared/cache.interceptor'
+import { StampaComanda } from './utente/stampaComanda.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { CacheInterceptor } from './shared/cache.interceptor'
     HamburgerOptionsModalComponent,
     OrdineComponent,
     CreaHamburgerComponent,
-    UtenteComponent
+    UtenteComponent,
+    StampaComanda
   ],
   imports: [
   BrowserModule,
@@ -97,7 +99,8 @@ import { CacheInterceptor } from './shared/cache.interceptor'
     {provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true}
   ],
   entryComponents:[
-    HamburgerOptionsModalComponent
+    HamburgerOptionsModalComponent,
+    StampaComanda
   ],
   bootstrap: [
     AppComponent
