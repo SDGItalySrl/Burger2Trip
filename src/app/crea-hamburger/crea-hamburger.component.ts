@@ -183,15 +183,17 @@ export class CreaHamburgerComponent{
      */
     aggiornaOrdine(value){
         this.prezzoTotOpzioni = this.hamburgerService.calcoloPrezzoTotale(this.prodotto);
-        this.prodotto.prezzo = this.prezzoTotOpzioni + prezzoHamburger;
         this.prodotto.prezzoBase = prezzoHamburger;
-        this.prodotto.nome = value.tipoHamburger;
-        (value.opzione == 'Menu') ? this.prodotto.isMenu = true : this.prodotto.isMenu = false;
         if(value.opzione == 'Menu'){
-            this.prodotto.prezzo += 3;
+            this.prodotto.prezzoBase += 3;
             this.aggiungiBibitaMenu(value.bibita);
             this.aggiungiPatatineMenu();
         }
+        this.prodotto.prezzo = this.prezzoTotOpzioni + this.prodotto.prezzoBase;
+        
+        this.prodotto.nome = value.tipoHamburger;
+        (value.opzione == 'Menu') ? this.prodotto.isMenu = true : this.prodotto.isMenu = false;
+        
         if(this.ordine.inserisciProdotto(this.prodotto)){ //inserisco il prodotto chiamando il servizio ordine
             this.toastr.success("Proddotto aggiunto correttamente");
             setTimeout(() => {

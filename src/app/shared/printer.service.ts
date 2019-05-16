@@ -93,6 +93,7 @@ export class PrinterService {
   setDataToPrint(objOrdine: any){
     let fritto: boolean = false;
     let bibita: boolean = false;
+    let totaleBibite: number = 0;
     let c = 0;
     var data: any = [];
     console.log(objOrdine)
@@ -121,50 +122,72 @@ export class PrinterService {
     data.push('\n');
     for (c; c < objOrdine.prodotti.length; c++) {
       //CONTROLLOSE I PRODOTTO HANNO QUANTITA MAGGIORE DI 1 E STAMPO IN BASE A QUELLO
-      if(objOrdine.prodotti[c].tipo == "fritto" && objOrdine.prodotti[c].quantita > 1 || objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1)
-        data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + objOrdine.prodotti[c].prezzo + 'E\n');
+      if(objOrdine.prodotti[c].tipo == "fritto" && objOrdine.prodotti[c].quantita > 1 || objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1){
+        data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + 
+        ((objOrdine.prodotti[c].prezzo % 1 == 0) ? (objOrdine.prodotti[c].prezzo + ',00') : (objOrdine.prodotti[c].prezzo + '0'))  + ' \n');
+        //SALVO A PARTE IL PREZZO DELLE BIBITE PER POI SOTTRARLO DAL TOTALE E STAMPARLO -> A RICHIESTA DELLA FRANCESCA
+        if(objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1)
+          totaleBibite += objOrdine.prodotti[c].prezzoBase * objOrdine.prodotti[c].quantita;
+        else if(objOrdine.prodotti[c].tipo == "bevanda")
+          totaleBibite += objOrdine.prodotti[c].prezzoBase; 
+      }
       else if(objOrdine.prodotti[c].tipo ==  "OPMenu" && objOrdine.prodotti[c].quantita > 1)
         data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + ' \n');
       else{
-        if(objOrdine.prodotti[c].isMenu)
-          data.push('' + objOrdine.prodotti[c].nome + ' - menu' + this.addBlankSpace(objOrdine.prodotti[c].nome.length + 7, 'prodotto') + objOrdine.prodotti[c].prezzoBase + ' E \n');
+        if(objOrdine.prodotti[c].isMenu){
+          data.push('' + objOrdine.prodotti[c].nome + ' - menu' + this.addBlankSpace(objOrdine.prodotti[c].nome.length + 7, 'prodotto') + 
+          ((objOrdine.prodotti[c].prezzoBase % 1 == 0) ? (objOrdine.prodotti[c].prezzoBase + ',00') : (objOrdine.prodotti[c].prezzoBase + '0'))  + ' \n');
+        }
         else if(objOrdine.prodotti[c].tipo ==  "OPMenu")
           data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + '\n');
-        else
-          data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto')  + objOrdine.prodotti[c].prezzoBase + ' E \n');
+        else{
+          data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto')  + 
+          ((objOrdine.prodotti[c].prezzoBase % 1 == 0) ? (objOrdine.prodotti[c].prezzoBase + ',00') : (objOrdine.prodotti[c].prezzoBase + '0'))  + ' \n');
+        }
       }
 
       if(objOrdine.prodotti[c].opzioni != undefined){
         for (var n= 0; n < objOrdine.prodotti[c].opzioni.length; n++) {
           //CONTROLLO CHE IL NOME E IL PREZZO DEI PRODOTTI SELEZIONATI SIA DIVERSO DA UNDEFINED
           if(objOrdine.prodotti[c].opzioni[n].tipo == "ingrediente-extra"){
-            if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "P" && objOrdine.prodotti[c].opzioni[n].quantita == 1)
-              data.push('    +' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtra') + objOrdine.prodotti[c].opzioni[n].prezzo + ' E\n');
-            else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "N" && objOrdine.prodotti[c].opzioni[n].quantita == 1)
+            if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "P" && objOrdine.prodotti[c].opzioni[n].quantita == 1){
+              data.push('    +' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtra') +  
+              ((objOrdine.prodotti[c].opzioni[n].prezzo % 1 == 0) ? (objOrdine.prodotti[c].opzioni[n].prezzo + ',00') : (objOrdine.prodotti[c].opzioni[n].prezzo + '0'))  + ' \n');
+            }
+            else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "N" && objOrdine.prodotti[c].opzioni[n].quantita == 1){
               data.push('    -' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtra') + '\n');
-            else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "P" && objOrdine.prodotti[c].opzioni[n].quantita > 1)
-              data.push('    +' + objOrdine.prodotti[c].opzioni[n].quantita + 'x ' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtraPiuQuantita') + objOrdine.prodotti[c].opzioni[n].prezzo + ' E\n');
-            else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "N" && objOrdine.prodotti[c].opzioni[n].quantita > 1)
+            }
+            else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "P" && objOrdine.prodotti[c].opzioni[n].quantita > 1){
+              data.push('    +' + objOrdine.prodotti[c].opzioni[n].quantita + 'x ' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtraPiuQuantita') +  
+              ((objOrdine.prodotti[c].opzioni[n].prezzo % 1 == 0) ? (objOrdine.prodotti[c].opzioni[n].prezzo + ',00') : (objOrdine.prodotti[c].opzioni[n].prezzo + '0'))  + ' \n');
+            }
+            else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "N" && objOrdine.prodotti[c].opzioni[n].quantita > 1){
               data.push('    -' + objOrdine.prodotti[c].opzioni[n].quantita + 'x ' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtraPiuQuantita') +'\n');
+            }
           }
           else if(objOrdine.prodotti[c].opzioni[n].nomeOpzione == "Tipo Cottura" && objOrdine.prodotti[c].opzioni[n].opzioneSelezionata != "")
             data.push('    Cottura: ' + objOrdine.prodotti[c].opzioni[n].opzioneSelezionata + this.addBlankSpace((objOrdine.prodotti[c].opzioni[n].opzioneSelezionata.length + 9), 'opzione') + '\n');
           else if(objOrdine.prodotti[c].opzioni[n].nomeOpzione == "Opzione" && objOrdine.prodotti[c].opzioni[n].opzioneSelezionata == "Doppio Hamburger")
-            data.push('    ' + objOrdine.prodotti[c].opzioni[n].opzioneSelezionata + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].opzioneSelezionata.length, 'opzione') + objOrdine.prodotti[c].opzioni[n].prezzo + ' E\n');
+            data.push('    ' + objOrdine.prodotti[c].opzioni[n].opzioneSelezionata + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].opzioneSelezionata.length, 'opzione') +   
+            ((objOrdine.prodotti[c].opzioni[n].prezzo % 1 == 0) ? (objOrdine.prodotti[c].opzioni[n].prezzo + ',00') : (objOrdine.prodotti[c].opzioni[n].prezzo + '0'))  + ' \n');
         }
       }
       data.push('\n');
 
       if(objOrdine.prodotti[c + 1] != undefined){
         if(fritto == false && objOrdine.prodotti[c + 1].tipo == "fritto"){
-        data.push('---------------------------------------------    \n');
-        fritto = true;
+          if(objOrdine.nomeCliente != '')
+            data.push(objOrdine.nomeCliente + this.addBlankSpace(20, "prodotto") +'\n');
+
+          data.push('---------------------------------------------    \n');
+          fritto = true;
         }
         else if(bibita == false && objOrdine.prodotti[c + 1].tipo == "bevanda"){
           data.push('---------------------------------------------    \n');
           bibita = true;
         }
         else if(fritto == false && objOrdine.prodotti[c + 1].tipo == "OPMenu" ){
+          data.push(objOrdine.nomeCliente + '                          ');
           data.push('---------------------------------------------    \n');
           fritto = true;
         }
@@ -183,7 +206,16 @@ export class PrinterService {
         else
           data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + '3 E\n');
       }
-      data.push('TOTALE EURO' + this.addBlankSpace(11, "prodotto") + objOrdine.totale + 'E\n');
+      if(totaleBibite != 0){
+        data.push('TOTALE BIBITE' + this.addBlankSpace(13, "prodotto") + ((totaleBibite % 1 == 0) ? (totaleBibite + ',00') : (totaleBibite + '0')) + '\n');
+        let tot = objOrdine.totale - totaleBibite;
+        data.push('TOTALE EURO' + this.addBlankSpace(13, "prodotto") + ((tot % 1 == 0) ? (tot + ',00') : (tot + '0'))  + ' \n');
+      }
+      else
+        data.push('TOTALE EURO' + this.addBlankSpace(11, "prodotto") + 
+        ((objOrdine.totale % 1 == 0) ? (objOrdine.totale + ',00') : (objOrdine.totale + '0')) + '\n');
+        let date = new Date();
+        data.push('ORA: ' + date.toString().substring(16, 24) + '\n');
       data.push('\n');
     
 
@@ -206,6 +238,8 @@ export class PrinterService {
       spacenumber = 27 - firststringLenght;
     else if( richiestoDa == "ingredientiExtraPiuQuantita")
       spacenumber = 24 - firststringLenght;
+    else if( richiestoDa == "nome")
+    spacenumber = 46 - firststringLenght;
     else
       spacenumber = 28 - firststringLenght;
 

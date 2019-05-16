@@ -153,7 +153,7 @@ export class OrdineService{
      */
     calcoloPrezzoTotale(){
         try {
-            this.ordine.totale=0;
+            this.ordine.totale = 0;
             for (let index = 0; index < this.ordine.prodotti.length; index++) {
                 this.ordine.totale += this.ordine.prodotti[index].prezzo;
             }
