@@ -251,7 +251,7 @@ export class OrdineService{
             if(this.ordine.consegnaDomicilio == true)
                 (this.ordine.totale > 20) ? this.ordine.prezzoConsegna = 1 : this.ordine.prezzoConsegna = 3;
             
-            if(from == "calcoloFinale")
+            if(from == "calcoloFinale" && this.ordine.prezzoConsegna != undefined)
                 this.ordine.totale += this.ordine.prezzoConsegna;
 
             this.prezzoTotale.next(this.ordine.totale);

@@ -31,9 +31,7 @@ export class CreaHamburgerComponent{
         private ordine: OrdineService,
         private creaHamburgerService : CreaHamburgerService,
         private hamburgerService: HamburgerService){ 
-
             this.prodottoPadre = new ProdottoPadre();
-
         }
 
     ngOnInit(){

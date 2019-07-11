@@ -85,12 +85,12 @@ setDataToPrint(objOrdine: any){
   let c = 0;
   var data: any = [];
   
-  if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != ''){
+  if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != ""){
     if(objOrdine.consegnaDomicilio == true)
       data.push('Cliente: ' + objOrdine.nomeCliente + '                    CONSEGNA'); 
     else if(objOrdine.asporto == true)
       data.push(objOrdine.nomeCliente + '                    ASPORTO');
-    else if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != '')
+    else if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != "")
       data.push(objOrdine.nomeCliente + '                    EAT IN');      
   }
   else
@@ -98,6 +98,7 @@ setDataToPrint(objOrdine: any){
 
   data.push('\n');
   data.push('\n');
+
   //SE DEVE ESSERE CONSEGNARE AGGIUNGO ALTRE INFORMAZIONI SUL CLIENTE
   if(objOrdine.consegnaDomicilio == true){
     data.push('Indirizzo: ' + objOrdine.indirizzo + '\n');
@@ -106,26 +107,18 @@ setDataToPrint(objOrdine: any){
     data.push('Telefono: ' + objOrdine.numeroTelefono.toString() + '\n');
     data.push('Orario: ' + objOrdine.orario.toString() + '\n');
     (objOrdine.note != "" || objOrdine.note != undefined) ? data.push('NOTE: ' +objOrdine.note + '\n') : data.push('\n');
-  }
+  }  
   data.push('\n');
+
   for (c; c < objOrdine.prodotti.length; c++) {
     //CONTROLLOSE I PRODOTTO HANNO QUANTITA MAGGIORE DI 1 E STAMPO IN BASE A QUELLO
     if(objOrdine.prodotti[c].tipo == "fritto" && objOrdine.prodotti[c].quantita > 1 || objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1){
       data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + 
       ((objOrdine.prodotti[c].prezzo % 1 == 0) ? (objOrdine.prodotti[c].prezzo + ',00') : (objOrdine.prodotti[c].prezzo + '0'))  + ' \n');
-      //SALVO A PARTE IL PREZZO DELLE BIBITE PER POI SOTTRARLO DAL TOTALE E STAMPARLO -> A RICHIESTA DELLA FRANCESCA
-      if(objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1)
-        totaleBibite += objOrdine.prodotti[c].prezzoBase * objOrdine.prodotti[c].quantita;
-      else if(objOrdine.prodotti[c].tipo == "bevanda")
-        totaleBibite += objOrdine.prodotti[c].prezzoBase; 
     }
     else if(objOrdine.prodotti[c].tipo ==  "OPMenu" && objOrdine.prodotti[c].quantita > 1)
       data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + ' \n');
     else{
-      /*if(objOrdine.prodotti[c].isMenu){
-        data.push('' + objOrdine.prodotti[c].nome + ' - menu' + this.addBlankSpace(objOrdine.prodotti[c].nome.length + 7, 'prodotto') + 
-        ((objOrdine.prodotti[c].prezzoBase % 1 == 0) ? (objOrdine.prodotti[c].prezzoBase + ',00') : (objOrdine.prodotti[c].prezzoBase + '0'))  + ' \n');
-      }*/
       if(objOrdine.prodotti[c].tipo ==  "OPMenu")
         data.push('' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + '\n');
       else{
@@ -194,6 +187,10 @@ setDataToPrint(objOrdine: any){
     if(objOrdine.consegnaDomicilio == true){
         data.push('CONSEGNA DOMICILIO' + this.addBlankSpace(18, "prodotto") + objOrdine.prezzoConsegna + '  \n');
     }
+
+    //funzione che rivaca il totale delle bibite
+    totaleBibite = calcolaTotaleBibite(objOrdine);
+
     if(totaleBibite != 0){
       data.push('TOTALE BIBITE' + this.addBlankSpace(13, "prodotto") + ((totaleBibite % 1 == 0) ? (totaleBibite + ',00') : (totaleBibite + '0')) + '\n');
       let tot = objOrdine.totale - totaleBibite;
@@ -242,6 +239,21 @@ addBlankSpace(firststringLenght: number, richiestoDa: string){
   return space;
 }
 
+}
+
+/**
+ * SALVO A PARTE IL PREZZO DELLE BIBITE PER POI SOTTRARLO DAL TOTALE E STAMPARLO -> A RICHIESTA DELLA FRANCESCA
+ * @param objOrdine oggetto ordine
+ */
+function calcolaTotaleBibite(objOrdine: Ordine){
+  var tot = 0;
+  for (let i = 0; i < objOrdine.prodotti.length; i++) {
+    if(objOrdine.prodotti[i].tipo == "bevanda" && objOrdine.prodotti[i].quantita > 1)
+      tot += objOrdine.prodotti[i].prezzoBase * objOrdine.prodotti[i].quantita;
+    else if(objOrdine.prodotti[i].tipo == "bevanda")
+      tot += objOrdine.prodotti[i].prezzoBase; 
+  }
+  return tot;
 }
 
 const cert = "-----BEGIN CERTIFICATE-----\n" +
