@@ -2,7 +2,7 @@
 <div class="jumbotron orders">    
         <mat-list>
             <mat-list-item *ngFor="let prodotto of ordineList.prodotti">                
-                <div class="row" *ngIf="prodotto" >
+                <div class="row" *ngIf="prodotto != undefined" >
                     <!-- Controllo per la visualizzazione del bottone +. Se c'è almeno 1 opzione selezionata-->
                     <div class="col-md-1 col-sm-1 p-0 delete" (click)="showHideOpzioni(prodotto.id)"
                             *ngIf="prodotto.opzioni != undefined && checkOpzioni(prodotto)">
@@ -62,33 +62,35 @@
             </mat-list-item>
         </mat-list>
 
-    <hr *ngIf="ordineList.prodotti.length != 0">
-        <!-- DIV PREZZO TOTALE -->
-        <div class="row" *ngIf="ordineList.prodotti.length != 0">
-            <div class="col-md-8 col-sm-8" *ngIf="prezzoConsegna == 3">
-                <h6>Costo di consegna: </h6>
+    <div *ngIf="ordineList.prodotti != undefined">
+        <hr *ngIf="ordineList.prodotti.length != 0">
+            <!-- DIV PREZZO TOTALE -->
+            <div class="row" *ngIf="ordineList.prodotti.length != 0">
+                <div class="col-md-8 col-sm-8" *ngIf="prezzoConsegna == 3">
+                    <h6>Costo di consegna: </h6>
+                </div>
+                <div class="col-md-4 col-sm-4" *ngIf="prezzoConsegna == 3">
+                    <p>{{prezzoConsegna | currency: 'EUR':'symbol':'1.2-2'}}</p>
+                </div>
+                <div class="col-md-8 col-sm-8" *ngIf="asporto && asporto!= 'undefined' ">
+                    <h6>Asporto </h6>
+                </div>
+                <div class="col-md-4 col-sm-4" *ngIf="prezzoConsegna == 3">
+                    &nbsp;
+                </div>  
+                <div class="col-md-8 col-sm-8">
+                    <h6>Totale: </h6>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    <p>{{prezzoTotale | currency: 'EUR':'symbol':'1.2-2'}}</p>
+                </div>   
+            
+                <button class="col-md-12 col-sm-12 order-button pre-order" type="button" 
+                        mat-button (click)="completaOrdine()">
+                    Completa Ordine
+                </button>
             </div>
-            <div class="col-md-4 col-sm-4" *ngIf="prezzoConsegna == 3">
-                <p>{{prezzoConsegna | currency: 'EUR':'symbol':'1.2-2'}}</p>
-            </div>
-            <div class="col-md-8 col-sm-8" *ngIf="asporto && asporto!= 'undefined' ">
-                <h6>Asporto </h6>
-            </div>
-            <div class="col-md-4 col-sm-4" *ngIf="prezzoConsegna == 3">
-                &nbsp;
-            </div>  
-            <div class="col-md-8 col-sm-8">
-                <h6>Totale: </h6>
-            </div>
-            <div class="col-md-4 col-sm-4">
-                <p>{{prezzoTotale | currency: 'EUR':'symbol':'1.2-2'}}</p>
-            </div>   
-          
-            <button class="col-md-12 col-sm-12 order-button pre-order" type="button" 
-                    mat-button (click)="completaOrdine()">
-                Completa Ordine
-            </button>
-        </div>
+    </div>
     <hr>
     <!-- Icone modalita Pagamento -->
     <div class="row"> 

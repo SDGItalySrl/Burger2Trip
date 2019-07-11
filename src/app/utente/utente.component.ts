@@ -3,9 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OrdineService } from '../shared/ordini.service';
 import { PrinterService } from '../shared/printer.service'; 
 import { ToastrService } from '../common/toastr.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog} from '@angular/material';
 import { StampaComanda } from './stampaComanda.component';
-import { OrdineComponent } from '../ordini/ordini.component';
+import { Router } from '@angular/router';
 
 declare var qz: any;
 
@@ -13,7 +13,9 @@ declare var qz: any;
     selector: "user",
     templateUrl: "./utente.component.html",
     styles: [`
-       .order-button[_ngcontent-c6]{display:none;}
+        :host /deep/ orders-container .pre-order {
+            display: none;
+        }
     `]
 })
 
@@ -38,6 +40,7 @@ export class UtenteComponent{
 
     constructor(private ordineService: OrdineService,
                 private printerService: PrinterService,
+                private router: Router,
                 private toastr: ToastrService,
                 public dialog: MatDialog){ }
 
@@ -101,6 +104,8 @@ export class UtenteComponent{
             this.ordineService.completaOrdine(formValues);
             if(this.printerService.print(this.ordineService.ordine)){
                 this.reimpostaOrdine();
+                // Svuotato l'oggetto ordine e reindirizzo al menu principale
+                this.router.navigate(['/menu']);
                 this.toastr.success("Ordine stampato!");
             }
             else

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Opzioni, OrdineService, Prodotto } from '../shared/ordini.service';
+import { Opzioni, OrdineService, Prodotto, ProdottoPadre } from '../shared/ordini.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from '../common/toastr.service';
 import { CreaHamburgerService, Ingredienti } from '../shared/crea-hamburger.service';
@@ -22,12 +22,19 @@ export class CreaHamburgerComponent{
     prezzoTotOpzioni: number = 0;
     prodotto: Prodotto;
     ingredienti: Opzioni;
+    tipoHamburger;
+    option;
+    prodottoPadre: ProdottoPadre;
 
     constructor(private route: ActivatedRoute,
         private toastr: ToastrService,
         private ordine: OrdineService,
         private creaHamburgerService : CreaHamburgerService,
-        private hamburgerService: HamburgerService){ }
+        private hamburgerService: HamburgerService){ 
+
+            this.prodottoPadre = new ProdottoPadre();
+
+        }
 
     ngOnInit(){
        // this.listaOpzioniSelezionate = this.route.snapshot.data['ingredienti'];
@@ -37,8 +44,8 @@ export class CreaHamburgerComponent{
         );
 
         let tipoHamburger = new FormControl("", Validators.required);
-        let opzione = new FormControl("");
-        let bibita = new FormControl({disabled: true, value: 'Singolo'}, Validators.required);
+        let opzione = new FormControl("", Validators.required);
+        let bibita = new FormControl({disabled: true, value: ''}, Validators.required);
         
         this.creaForm = new FormGroup({
             tipoHamburger: tipoHamburger,
@@ -47,8 +54,16 @@ export class CreaHamburgerComponent{
         })
 
         opzione.valueChanges.subscribe(value => {
-            (value == "Menu") ? bibita.enable() : bibita.disable()
+            if(value == "Menu"){
+                bibita.enable();
+                this.creaForm.get("opzione").validator = <any>Validators.compose([Validators.required]);
+            }
+            else{ 
+                 bibita.disable();
+                 this.creaForm.get("opzione").clearValidators();
+            }
         });
+        this.creaForm.get('opzione').updateValueAndValidity();
 
         if(this.prodotto == undefined){
             this.prodotto = new Prodotto();
@@ -61,8 +76,7 @@ export class CreaHamburgerComponent{
             this.prodotto.priorita = 1;
             this.prodotto.isMenu = false;
             this.prodotto.showOpzioni = false;
-            this.prodotto.opzioni = [];
-            
+            this.prodotto.opzioni = [];            
         }
     }
 
@@ -86,7 +100,7 @@ export class CreaHamburgerComponent{
                     prezzo: parseFloat(objIngrediente.prezzo),
                     quantita: parseFloat(objIngrediente.quantita) + 1,
                     tipo: 'ingrediente-extra',
-                    valueQuantita: "P"
+                    valueQuantita: "P" //quantita positiva o negativa. P: positivio. N: Negativo
                 });            
                 //Aggiorno anche la lista che viene utilizzata per mostrare i dati sulla page
                 this.listaOpzioniSelezionate[indexIngrediente].quantita = parseFloat(objIngrediente.quantita) + 1;
@@ -103,8 +117,6 @@ export class CreaHamburgerComponent{
                 this.listaOpzioniSelezionate[indexIngrediente].prezzo = this.prodotto.opzioni[index].prezzo;
                 this.listaOpzioniSelezionate[indexIngrediente].quantita = this.prodotto.opzioni[index].quantita;
 
-                console.log(this.prodotto)
-                console.log(this.listaOpzioniSelezionate[indexIngrediente])
             }
 
         } 
@@ -135,8 +147,10 @@ export class CreaHamburgerComponent{
 
     }
 
-    aggiungiPatatineMenu(){
+    aggiungiPatatineMenu(id:number){
         try {
+            //Id potrebbe variare nell'ordini.service.ts productExists()
+            this.prodottoPadre.id = id;
             let prodotto:Prodotto = {
                 id: undefined,
                 nome: 'Patatine - Menu',
@@ -145,10 +159,12 @@ export class CreaHamburgerComponent{
                 priorita: 2,
                 isMenu: false,
                 showOpzioni: false,
+                idProdottoPadre: [],
                 opzioni: undefined,
                 quantita: undefined,
                 tipo: "OPMenu"//opzione menu 
             }
+            prodotto.idProdottoPadre.push(this.prodottoPadre);
             let res: boolean = this.ordine.inserisciProdotto(prodotto);
         } 
         catch (error) {
@@ -156,8 +172,10 @@ export class CreaHamburgerComponent{
         }
     }
 
-    aggiungiBibitaMenu(nomeBibita: string){
+    aggiungiBibitaMenu(nomeBibita: string, id:number){
         try {
+            //Id potrebbe variare nell'ordini.service.ts productExists()
+            this.prodottoPadre.id = id;
             let prodotto:Prodotto = {
                 id: undefined,
                 nome: nomeBibita + ' - Menu',
@@ -166,10 +184,12 @@ export class CreaHamburgerComponent{
                 priorita: 3,
                 isMenu: false,
                 showOpzioni: false,
+                idProdottoPadre: [],
                 opzioni: undefined,
                 quantita: undefined,
                 tipo: "OPMenu" //opzione menu
             }
+            prodotto.idProdottoPadre.push(this.prodottoPadre);
             let res: boolean = this.ordine.inserisciProdotto(prodotto);
         } 
         catch (error) {
@@ -184,17 +204,28 @@ export class CreaHamburgerComponent{
     aggiornaOrdine(value){
         this.prezzoTotOpzioni = this.hamburgerService.calcoloPrezzoTotale(this.prodotto);
         this.prodotto.prezzoBase = prezzoHamburger;
+
         if(value.opzione == 'Menu'){
             this.prodotto.prezzoBase += 3;
-            this.aggiungiBibitaMenu(value.bibita);
-            this.aggiungiPatatineMenu();
+            this.prodotto.isMenu = true;
         }
-        this.prodotto.prezzo = this.prezzoTotOpzioni + this.prodotto.prezzoBase;
-        
+        else
+            this.prodotto.isMenu = false;
+
+        this.prodotto.prezzo = this.prezzoTotOpzioni + this.prodotto.prezzoBase;        
         this.prodotto.nome = value.tipoHamburger;
-        (value.opzione == 'Menu') ? this.prodotto.isMenu = true : this.prodotto.isMenu = false;
         
         if(this.ordine.inserisciProdotto(this.prodotto)){ //inserisco il prodotto chiamando il servizio ordine
+
+
+            let id = this.ordine.ordine.prodotti.length - 1;
+            
+            //Inserisco patatine e bibita per il menu associati all'id del prodotto padre
+            if(value.opzione == 'Menu'){                
+                this.aggiungiPatatineMenu(id);
+                this.aggiungiBibitaMenu(value.bibita, id);
+            }
+
             this.toastr.success("Proddotto aggiunto correttamente");
             setTimeout(() => {
                 this.creaForm.reset();

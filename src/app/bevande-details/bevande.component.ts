@@ -19,8 +19,12 @@ export class BevandeDetailComponent{
 
     ngOnInit(){
         this.bevandeService.getBevande().subscribe(
-            (data: Bevande) => this.bevande = data.rows,
-            (err: any) => console.log(err)
+            (data: Bevande) => {
+                this.bevande = data.rows
+            },
+            (err: any) => {
+                console.log(err)
+            }
         );
     }
 
@@ -34,6 +38,7 @@ export class BevandeDetailComponent{
                 priorita: 3,
                 isMenu: false,
                 showOpzioni: false,
+                idProdottoPadre: undefined,
                 opzioni: undefined,
                 quantita: undefined,
                 tipo: "bevanda"

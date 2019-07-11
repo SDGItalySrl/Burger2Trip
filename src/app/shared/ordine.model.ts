@@ -4,6 +4,7 @@ export interface IOrdine{
     totale: number;
     nomeCliente: string;
     consegnaDomicilio: boolean;
+    prezzoConsegna: number;
     asporto: boolean;
     citta: string;
     indirizzo: string;
@@ -25,10 +26,10 @@ export interface IProdotto{
     opzioni: IOpzioni[];
     isMenu : boolean;
     showOpzioni: boolean;
+    idProdottoPadre: IdProdottoPadre[];
     quantita?: number;
     tipo?: string;
 }
-
 
 export interface IOpzioni{
     id: number;
@@ -39,4 +40,8 @@ export interface IOpzioni{
     quantita?: number;
     tipo? : string; 
     valueQuantita?: string; //quantita positiva o negativa P: positivio. N: Negativo
+}
+
+export interface IdProdottoPadre{
+    id:number;
 }

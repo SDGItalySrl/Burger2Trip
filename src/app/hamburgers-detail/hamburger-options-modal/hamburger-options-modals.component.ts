@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IHamburger } from 'src/app/shared/hamburger.model';
-import { OrdineService, Prodotto } from 'src/app/shared/ordini.service';
+import { OrdineService, Prodotto, ProdottoPadre } from 'src/app/shared/ordini.service';
 import { ToastrService } from '../../common/toastr.service';
 import { HamburgerService } from 'src/app/shared/hamburger.service';
 import { IOpzioni } from 'src/app/shared/ordine.model';
@@ -26,6 +26,7 @@ export class HamburgerOptionsModalComponent{
     opzione: FormControl;
     bibita: FormControl;
     prodotto: Prodotto;
+    prodottoPadre: ProdottoPadre;
     listaOpzioniSelezionate: Array<IOpzioni>;
     prezzoTotOpzioni: number = 0;
 
@@ -35,7 +36,10 @@ export class HamburgerOptionsModalComponent{
                 private hamburgerService: HamburgerService,
                 private creaHamburgerService: CreaHamburgerService,
                 public dialogRef: MatDialogRef<HamburgerOptionsModalComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: any){  }
+                @Inject(MAT_DIALOG_DATA) public data: any){  
+
+                    this.prodottoPadre = new ProdottoPadre();
+                }
 
     ngOnInit(){
         //la variabile hamburger contiene l'oggetto proveniente dal componente padre hamburger.component.ts
@@ -110,18 +114,20 @@ export class HamburgerOptionsModalComponent{
                         priorita: 1,
                         prezzo: (this.opzione.value == "Doppio Hamburger") ? 2.50 : 0,
                     });
-
-                    if(this.data.isMenu){
-                        this.aggiungiPatatineMenu();
-                        this.aggiungiBibitaMenu(this.bibita.value);
-                    }
-
                     //calcolo il prezzo totale in base al tipo di hamburger selezionato (doppio hamburger o singolo)
                     this.prezzoTotOpzioni = this.hamburgerService.calcoloPrezzoHamburger(this.prodotto);
                     this.prodotto.prezzoBase = (this.data.isMenu == true) ? this.hamburger.prezzo_menu : this.hamburger.prezzo_singolo;
                     this.prodotto.prezzo = this.prezzoTotOpzioni + ((this.data.isMenu == true) ? this.hamburger.prezzo_menu : this.hamburger.prezzo_singolo);
                     
                     if(this.ordine.inserisciProdotto(this.prodotto)){ //inserisco il prodotto chiamando il servizio ordine
+                        let id = this.ordine.ordine.prodotti.length - 1;
+                       
+                        //Inserisco patatine e bibita per il menu associati all'id del prodotto padre
+                        if(this.data.isMenu){
+                            this.aggiungiPatatineMenu(id);
+                            this.aggiungiBibitaMenu(this.bibita.value, id);
+                        }
+
                         this.toastr.success("Proddotto aggiunto correttamente");
                         setTimeout(() => {
                             this.opzioniForm.reset();
@@ -140,8 +146,10 @@ export class HamburgerOptionsModalComponent{
             
     }   
 
-    aggiungiPatatineMenu(){
+    aggiungiPatatineMenu(id: number){
         try {
+            //Id potrebbe variare nell'ordini.service.ts productExists()
+            this.prodottoPadre.id = id;
             let prodotto:Prodotto = {
                 id: undefined,
                 nome: 'Patatine - Menu',
@@ -150,10 +158,12 @@ export class HamburgerOptionsModalComponent{
                 priorita: 2,
                 isMenu: false,
                 showOpzioni: false,
+                idProdottoPadre: [],
                 opzioni: undefined,
                 quantita: undefined,
                 tipo: "OPMenu"//opzione menu 
             }
+            prodotto.idProdottoPadre.push(this.prodottoPadre);
             let res: boolean = this.ordine.inserisciProdotto(prodotto);
         } 
         catch (error) {
@@ -161,8 +171,9 @@ export class HamburgerOptionsModalComponent{
         }
     }
 
-    aggiungiBibitaMenu(nomeBibita: string){
+    aggiungiBibitaMenu(nomeBibita: string, id:number){
         try {
+            this.prodottoPadre.id = id;
             let prodotto:Prodotto = {
                 id: undefined,
                 nome: nomeBibita + ' - Menu',
@@ -171,10 +182,12 @@ export class HamburgerOptionsModalComponent{
                 priorita: 3,
                 isMenu: false,
                 showOpzioni: false,
+                idProdottoPadre: [],
                 opzioni: undefined,
                 quantita: undefined,
                 tipo: "OPMenu" //opzione menu
             }
+            prodotto.idProdottoPadre.push(this.prodottoPadre);
             let res: boolean = this.ordine.inserisciProdotto(prodotto);
         } 
         catch (error) {

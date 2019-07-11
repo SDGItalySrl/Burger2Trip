@@ -34,6 +34,7 @@ export class FrittiDetailComponent{
                 priorita: 2,
                 isMenu: false,
                 showOpzioni: false,
+                idProdottoPadre: undefined,
                 opzioni: undefined,
                 quantita: undefined,
                 tipo: "fritto"        

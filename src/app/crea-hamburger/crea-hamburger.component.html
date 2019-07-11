@@ -24,8 +24,7 @@
                                     </mat-radio-group>
 
                                     <mat-form-field>
-                                            <mat-select formControlName="bibita" id="bibita" placeholder="Bibita" required 
-                                                     disabled="creaForm.controls.opzione?.value == 'Singolo'">
+                                            <mat-select formControlName="bibita" id="bibita" placeholder="Bibita" required >
                                                     <mat-option value="Coca Cola 33cl">Coca Cola 33cl</mat-option>
                                                     <mat-option value="Fanta 33cl">Fanta 33cl</mat-option>
                                                     <mat-option value="Sprite 33cl">Sprite 33cl</mat-option>
@@ -55,7 +54,7 @@
                                     </mat-list>                                    
                             </div>
                             <button mat-raised-button type="submit"
-                                    [disabled]="creaForm.invalid">
+                                    [disabled]="creaForm.invalid || (creaForm.controls.opzione?.value == 'menu' && creaForm.controls.bibita?.value != '') ">
                                 Aggiungi </button>
                         </div>
                     

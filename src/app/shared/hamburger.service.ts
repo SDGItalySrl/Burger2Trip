@@ -2,18 +2,17 @@ import {Injectable} from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { IHamburger } from './hamburger.model'
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable()
 export class HamburgerService{
 
-    private url = "http://192.168.1.100:8083/spreadsheets?spreadSheetID=1VkMyVpqfR1QG5w4OY6Tu-nACiRGvBi2ehLV2TRcztCw&range=A%3AG&searchFilter&api-version=1.0"
     constructor(private http: HttpClient){ }
     /**
      * Ritorna la costante HamburgerList
      */
     getHamburgers(): Observable<Hamburger>{
-        console.log('getting fritti from http request');
-        return <Observable<Hamburger>> this.http.get(this.url);   
+        return <Observable<Hamburger>> this.http.get(environment.hamburgerSheet);   
     }
 
     /**

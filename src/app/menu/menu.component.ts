@@ -10,7 +10,7 @@ export class MenuComponent{
         {
           descrizione: "Crea il tuo hamburger",
           categoria: "s",
-          img_path: "../assets/images/preparaHam1.jpg",
+          img_path: "assets/images/preparaHam1.jpg",
           path_url: "crea-hamburger",
           priorita: "1",
           prezzo: "10.00"
@@ -18,7 +18,7 @@ export class MenuComponent{
         {
           descrizione: "Hamburger",
           categoria: "s",
-          img_path: "../assets/images/preparaHam1.jpg",
+          img_path: "assets/images/hamburger.jpg",
           path_url: "hamburgers-details",
           priorita: "1",
           prezzo: "10.00"
@@ -26,7 +26,7 @@ export class MenuComponent{
         {
           descrizione: "Fritti",
           categoria: "n",
-          img_path: "../assets/images/preparaHam1.jpg",
+          img_path: "assets/images/fritti.jpg",
           path_url: "fritti-details",
           priorita: "2",
           prezzo: "10.00"
@@ -34,7 +34,7 @@ export class MenuComponent{
         {
           descrizione: "Bevande",
           categoria: "n",
-          img_path: "../assets/images/preparaHam1.jpg",
+          img_path: "assets/images/alcolici.jpg",
           path_url: "bevande-details",
           priorita: "3",
           prezzo: "10.00"

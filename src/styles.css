@@ -16,17 +16,71 @@ body{background-color:#344955 !important}
 }
 
 @media(min-width: 576px){
-    .alergy-alert hr{
-        display: none;
+    .alergy-alert hr{ display: none; }
+}
+
+/*Grid percentages*/
+@media(min-width: 340px){
+    .col-sm-1 {
+        flex: 0 0 8.333333%;
+        max-width: 8.333333%;
     }
-    .col-sm-6{
-        flex: 0 0 100% !important;
+    .col-sm-2 {
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+    .col-sm-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    .col-sm-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+    .col-sm-5 {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+    /*Volutamente messi a 100%*/
+    .col-sm-6, .col-md-6{
+        flex: 0 0 100% !important; 
         max-width: 100% !important;
     }
+    .col-sm-7 {
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+    .col-sm-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    } 
+    .col-sm-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+    .col-sm-10 {
+        flex: 0 0 83.333333%;
+        max-width: 83.333333%;
+    }
+    .col-sm-11 {
+        flex: 0 0 91.666667%;
+        max-width: 91.666667%;
+    }
+
+    
+
+    
+
 }
 
 @media(max-width: 576px){
     .menu .card{ margin: 0 1rem 0 1rem;}
+}
+
+@media(max-width: 770px){
+    .menu-descrizione .descrizione { color:black;}
+    .container-products .row h5{color:white}
+    .container-products .product-title h5{color: black;}
 }
 
 @media(min-width:1025px){
@@ -91,3 +145,4 @@ ul{list-style: none;}
 .order-button{float: right;width: 50%;text-align: center;color: #4A6572;background-color: #F9AA33;}
 .order-detail-font{font-size:0.9rem}
 .order-detail-fa{vertical-align: top; font-size: 0.9rem}
+.fa-angle-right, .fa-maxcdn, .fa-trash{cursor: pointer;}

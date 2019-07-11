@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { OrdineService, Ordine, Prodotto, Opzioni } from '../shared/ordini.service';
+import { OrdineService, Ordine, Prodotto } from '../shared/ordini.service';
 import { Router } from '@angular/router';
 
 
@@ -53,7 +53,13 @@ export class OrdineComponent{
      */
     eliminaProdotto(id: number){
         try{
-            this.ordineService.eliminaProdotto(id);
+            //Trovo l'indice del prodotto nell'ordine e controllo se è menu, in base a quello chiamo la funzione adeguata
+            var indiceProdotto = this.ordineList.prodotti.map(function(prodotto) {return prodotto.id;}).indexOf(id);
+
+            if(this.ordineList.prodotti[indiceProdotto].isMenu)
+                this.ordineService.eliminaProdottoMenu(id);
+            else
+                this.ordineService.eliminaProdotto(id);
         }
         catch(error){
             console.log(error);
@@ -119,7 +125,7 @@ export class OrdineComponent{
     }
 
     reimpostaOrdine(){
-        this.ordineList = new Ordine();     
+        this.ordineList = new Ordine();
     }
 
 }

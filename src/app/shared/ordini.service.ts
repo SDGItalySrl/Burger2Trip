@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { IOrdine, IProdotto, IOpzioni } from './ordine.model';
+import { IOrdine, IProdotto, IOpzioni, IdProdottoPadre } from './ordine.model';
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 
 
 @Injectable()
 export class OrdineService{
     ordine: Ordine;
+    prodottoPadre: ProdottoPadre;
     private ordineListProdotti;
     ordineListAggiornato; 
     private prezzoTotale;
@@ -17,7 +19,7 @@ export class OrdineService{
     flagAsporto;
 
 
-    constructor(){
+    constructor(private http: HttpClient){
         this.ordine = new Ordine();
 
         this.ordineListProdotti = new BehaviorSubject(this.ordine.prodotti);
@@ -45,12 +47,11 @@ export class OrdineService{
                 this.ordine.prodotti.push(prodotto);
             }
             else{
-                if(!this.productExists(prodotto.nome)){
+                if(!this.productExists(prodotto)){
                     prodotto.id = nextId;
                     this.ordine.prodotti.push(prodotto);
                 }
             }
-            
             //Riordino la'oggetto prodotti in base alla priorita del prodotto come richiesto
             this.ordine.prodotti.sort(function(a, b) { return a.priorita - b.priorita })
             
@@ -58,7 +59,6 @@ export class OrdineService{
             this.ordineListProdotti.next(this.ordine.prodotti);
             this.calcoloPrezzoTotale();
 
-            console.log(this.ordine.prodotti)
             res = true;
         } 
         catch (error) {
@@ -66,6 +66,58 @@ export class OrdineService{
             res = false;
         }
         return res;
+    }
+
+/**
+     * Eliminazione di un prodotto menu insieme alle sui prodotto (opzioni segnati con nome " nome - Menu")
+     * attraverso l'id prodotto padre che è segnato nell'attributo idPrdottoPadre[] 
+     * @param idProdotto id prodotto
+     */
+    eliminaProdottoMenu(idProdotto: number){
+        try {
+            //Ricavo l'indice dell'opzione e prodotto attraverso i loro id
+            var indiceProdotto = this.ordine.prodotti.map(function(prodotto) {return prodotto.id;}).indexOf(idProdotto);
+            
+            for (let i = 0; i < this.ordine.prodotti.length; i++) {
+                if(this.ordine.prodotti[i].idProdottoPadre.length != 0){
+                    //Trovo l'indice del idprodottoPadre nell'array
+                    var indiceIdProdottoPadre = this.ordine.prodotti[i].idProdottoPadre
+                        .map(function(idPrdottoPadre) {return idPrdottoPadre.id})
+                        .indexOf(idProdotto);
+
+                    if(indiceIdProdottoPadre != -1){
+                        //elimino l'id dall'array
+                        this.ordine.prodotti[i].idProdottoPadre.splice(indiceIdProdottoPadre, 1)
+
+                        /*Aggiorno la quantita; Il prezzo non va toccato perchè essendo prodotti figli di un prodotto
+                        menu il prezzo è compreso nel prezzo del prodotto padre*/
+                        if(this.ordine.prodotti[i].quantita > 1){
+                            this.ordine.prodotti[i].quantita -= 1;
+
+                            //se la quantita è 1 la setto a undefined. altrimenti si vedrebbe 1x della quantità 
+                            //che deve essere visibile solamente con quantita 1+
+                            if(this.ordine.prodotti[i].quantita == 1)
+                                this.ordine.prodotti[i].quantita = undefined;
+                        }
+                        else if(this.ordine.prodotti[i].quantita == undefined){
+                            this.ordine.prodotti.splice(i, 1);
+                            // se il puntatore di trova sul penultimo record, dopo l'eliminazione cambia il length 
+                            // dell'array e salta l'ultimo perchè per lui questo diventa ultimo recordo. Per questo 
+                            // motivo faccio -1 per non fargli saltare nessun caso
+                            i -= 1;
+                        }
+                    }
+                }
+            }
+           
+            // Tolgo il prodotto padre e aggiorno la lista dei prodotti per la ordini.component
+            this.ordine.prodotti.splice(indiceProdotto, 1);
+            this.ordineListProdotti.next(this.ordine.prodotti);
+            this.calcoloPrezzoTotale();  // ricalcola il prezzoTotale
+        } 
+        catch (error) {
+            console.log(error)
+        }
     }
 
     /**
@@ -76,8 +128,21 @@ export class OrdineService{
         try {
             //Ricavo l'indice del prodotto attraverso l'idProdotto
             let indiceProdotto = this.ordine.prodotti.map(function(prodotto) {return prodotto.id;}).indexOf(id)
-            this.ordine.prodotti.splice(indiceProdotto, 1);
-            console.log(this.ordine.prodotti)
+            if(this.ordine.prodotti[indiceProdotto].quantita != undefined){
+                if(this.ordine.prodotti[indiceProdotto].quantita > 1){
+                    this.ordine.prodotti[indiceProdotto].quantita -= 1;
+                    this.ordine.prodotti[indiceProdotto].prezzo -= this.ordine.prodotti[indiceProdotto].prezzoBase;
+
+                    //se la quantota del prodotto è 1 la metto a undefined. Se è uno verra visualizzata nella lista
+                    if(this.ordine.prodotti[indiceProdotto].quantita == 1)
+                        this.ordine.prodotti[indiceProdotto].quantita = undefined;
+                }
+                else
+                    this.ordine.prodotti.splice(indiceProdotto, 1);
+            }
+            else
+                this.ordine.prodotti.splice(indiceProdotto, 1);
+
             //Aggiorno la lista dei prodotti per la ordini.component
             this.ordineListProdotti.next(this.ordine.prodotti);
             this.calcoloPrezzoTotale();  // ricalcola il prezzoTotale
@@ -100,10 +165,9 @@ export class OrdineService{
             
             //Aggiorno il prezzo del prodotto se l'utente elimina l'opzione "Doppio Hamburger"
             //che costa +€2.50 
-            if(this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].opzioneSelezionata == "Doppio Hamburger"){
-                this.ordine.prodotti[indiceProdotto].prezzo = 
-                    this.ordine.prodotti[indiceProdotto].prezzo - this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].prezzo;
-            }
+            if(this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].opzioneSelezionata == "Doppio Hamburger")
+                this.ordine.prodotti[indiceProdotto].prezzo -= this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].prezzo;
+
             //Eliminazione dei singoli ingredienti + aggionamento del prezzo per il HamburgerOptionsModalComponent e CreaHamburgerComponent
             if(this.ordine.prodotti[indiceProdotto].tipo == "crea-hamburger" ||
                 this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].valueQuantita == "P")
@@ -123,20 +187,45 @@ export class OrdineService{
     /**
      * Controllo se esiste già il prodotto nella lista ordine
      * Se si aumento la quantità del prodotto, altrimmenti inserisco il prodotto nell'ordine
-     * @param productName Nome del produtto da cercare
+     * @param p_prodotto Nome del produtto da cercare
      */
-    productExists(nomeProdotto: string){
+    productExists(p_prodotto: Prodotto){
         var res = false;
         try {
             for (let i = 0; i < this.ordine.prodotti.length; i++) {
-                if(this.ordine.prodotti[i].tipo == "bevanda" || this.ordine.prodotti[i].tipo == "fritto" || this.ordine.prodotti[i].tipo == "OPMenu"){
-                    if(this.ordine.prodotti[i].nome === nomeProdotto){                        
+                this.prodottoPadre = new ProdottoPadre();
+
+                if(this.ordine.prodotti[i].tipo == "bevanda" || this.ordine.prodotti[i].tipo == "fritto" 
+                    || this.ordine.prodotti[i].tipo == "OPMenu"){
+                    if(this.ordine.prodotti[i].nome === p_prodotto.nome){    
+
+                        /*il produtto esisteva gia e la quantita era undefined quindi aumento a uno*/
+                        /*inizialmento è segnata a undefined perchè il numero della quantita viene visualizzata dall'utente*/
+                        /*la faccio visualizzare solamente se e più di uno*/
                         if(this.ordine.prodotti[i].quantita == undefined)
                             this.ordine.prodotti[i].quantita = 1
-                            
+
+                        /*altrimento aggiungo + 1*/
                         this.ordine.prodotti[i].quantita = this.ordine.prodotti[i].quantita + 1;
+
+                        /*controllo se l'ordine inserito è il figlio di un prodotto e segno il suo id */
+                        /*Solo se è di tipo menu */
+                        if(this.ordine.prodotti[i].tipo == "OPMenu"){
+                            if(this.ordine.prodotti[i].nome.indexOf("Patatine - Menu") != -1){
+                                this.prodottoPadre.id = p_prodotto.idProdottoPadre[0].id;
+                                this.ordine.prodotti[i].idProdottoPadre.push(this.prodottoPadre);
+                            }
+                            else {
+                                if(this.ordine.prodotti[i].nome.indexOf("- Menu") != -1){
+                                    this.prodottoPadre.id = p_prodotto.idProdottoPadre[0].id;
+                                    this.ordine.prodotti[i].idProdottoPadre.push(this.prodottoPadre);
+                                }
+                            }
+                        }
+
                         if(this.ordine.prodotti[i].tipo != "OPMenu")
                             this.ordine.prodotti[i].prezzo = this.ordine.prodotti[i].prezzoBase * this.ordine.prodotti[i].quantita;
+
                         res = true;
                     }
                 }
@@ -151,17 +240,20 @@ export class OrdineService{
     /**
      * Calcola il prezzo totale dell'ordine
      */
-    calcoloPrezzoTotale(){
+    calcoloPrezzoTotale(from?){
         try {
             this.ordine.totale = 0;
             for (let index = 0; index < this.ordine.prodotti.length; index++) {
                 this.ordine.totale += this.ordine.prodotti[index].prezzo;
             }
             //Aggiungo il costo di consegna al prezzo totale se il flag consegna domicilio è checkato
-            if(this.ordine.totale > 20)
-                (this.ordine.consegnaDomicilio == true) ? this.ordine.totale += 1 : this.ordine.totale;
-            else
-                (this.ordine.consegnaDomicilio == true) ? this.ordine.totale += 3 : this.ordine.totale;
+
+            if(this.ordine.consegnaDomicilio == true)
+                (this.ordine.totale > 20) ? this.ordine.prezzoConsegna = 1 : this.ordine.prezzoConsegna = 3;
+            
+            if(from == "calcoloFinale")
+                this.ordine.totale += this.ordine.prezzoConsegna;
+
             this.prezzoTotale.next(this.ordine.totale);
         } 
         catch (error) {
@@ -189,8 +281,7 @@ export class OrdineService{
 
             this.consegnaDomicilio.next(this.ordine.consegnaDomicilio);
             this.asporto.next(this.ordine.asporto);
-            this.calcoloPrezzoTotale();
-            console.log(this.ordine);
+            this.calcoloPrezzoTotale("calcoloFinale");
         }
         catch (error) {
             console.log(error)
@@ -201,6 +292,8 @@ export class OrdineService{
         this.ordine = new Ordine();
         this.ordineListProdotti = new BehaviorSubject(this.ordine.prodotti);
         this.ordineListProdotti.next();
+        this.ordineListAggiornato = new BehaviorSubject(this.ordine.prodotti);
+        this.ordineListAggiornato.next();
         this.prezzoTotale = new BehaviorSubject<number>(this.ordine.totale);
         this.prezzoTotale.next();
         this.consegnaDomicilio = new BehaviorSubject<boolean>(this.ordine.consegnaDomicilio);
@@ -209,6 +302,7 @@ export class OrdineService{
         this.asporto.next();
     }
 }
+
 export class Ordine implements IOrdine {
     prodotti?: Prodotto[];
     constructor(){
@@ -218,6 +312,7 @@ export class Ordine implements IOrdine {
     totale: number;
     nomeCliente: string;
     consegnaDomicilio: boolean;
+    prezzoConsegna: number;
     citta: string;
     indirizzo: string;
     citofono: string;
@@ -238,10 +333,12 @@ export class Prodotto implements IProdotto{
     opzioni: Opzioni[];
     isMenu : boolean;
     showOpzioni: boolean;
+    idProdottoPadre: ProdottoPadre[];
     quantita?: number;
     tipo?: string;
     constructor(){
         this.opzioni = [];
+        this.idProdottoPadre = [];
     }
 }
 export class Opzioni implements IOpzioni{
@@ -254,3 +351,6 @@ export class Opzioni implements IOpzioni{
     tipo? : string;
     valueQuantita?: string; //quantita positiva o negativa. P: positivio. N: Negativo
 }
+export class ProdottoPadre implements IdProdottoPadre{
+    id: number;
+} 
