@@ -17,6 +17,7 @@ import { PrinterService } from '../shared/printer.service';
 
     stampa(){
         this.printerService.print(this.data);
+        this.dialogRef.close();
     }
   
   }

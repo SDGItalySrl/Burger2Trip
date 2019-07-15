@@ -291,15 +291,14 @@ export class OrdineService{
     reimpostaOrdine(){
         this.ordine = new Ordine();
         this.ordineListProdotti = new BehaviorSubject(this.ordine.prodotti);
-        this.ordineListProdotti.next();
-        this.ordineListAggiornato = new BehaviorSubject(this.ordine.prodotti);
-        this.ordineListAggiornato.next();
+        this.ordineListAggiornato = this.ordineListProdotti.asObservable();
         this.prezzoTotale = new BehaviorSubject<number>(this.ordine.totale);
-        this.prezzoTotale.next();
+        this.prezzoTotaleAggiornato = this.prezzoTotale.asObservable();
         this.consegnaDomicilio = new BehaviorSubject<boolean>(this.ordine.consegnaDomicilio);
-        this.consegnaDomicilio.next();
+        this.flagConsegnaAggiornato = this.consegnaDomicilio.asObservable();
         this.asporto = new BehaviorSubject<boolean>(this.ordine.asporto);
-        this.asporto.next();
+        this.flagAsporto = this.asporto.asObservable();
+        
     }
 }
 

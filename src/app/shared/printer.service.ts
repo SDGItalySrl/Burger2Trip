@@ -159,9 +159,9 @@ setDataToPrint(objOrdine: any){
     if(objOrdine.prodotti[c + 1] != undefined){
 
       if(fritto == false && objOrdine.prodotti[c + 1].tipo == "fritto"){
+        data.push('---------------------------------------------    \n');
         if(objOrdine.nomeCliente != '')
             data.push(objOrdine.nomeCliente + this.addBlankSpace(20, "prodotto") +'\n');
-
         data.push('---------------------------------------------    \n');
         fritto = true;
       }
