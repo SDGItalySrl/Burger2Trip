@@ -428,5 +428,71 @@ const listOpzioniPulita: Array<IOpzioni> = [
         nomeOpzione: "Pomodoro",
         quantita: 0,
         prezzo: 1
+    },
+    {
+        id: 11,
+        nomeOpzione: "Ketchup",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 12,
+        nomeOpzione: "Maionese",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 13,
+        nomeOpzione: "BBQ",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 14,
+        nomeOpzione: "Senape",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 15,
+        nomeOpzione: "Salsa Bacon",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 16,
+        nomeOpzione: "Harissa",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 17,
+        nomeOpzione: "BBQ piccante",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 18,
+        nomeOpzione: "Salsa rosa",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 19,
+        nomeOpzione: "Salsa yogurt",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 20,
+        nomeOpzione: "Salsa algerina",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 21,
+        nomeOpzione: "Guacemole",
+        quantita: 0,
+        prezzo: 0
     }
 ];

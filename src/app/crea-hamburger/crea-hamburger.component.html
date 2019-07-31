@@ -16,13 +16,20 @@
                                         <em *ngIf="creaForm.controls.tipoHamburger?.invalid && creaForm.controls.tipoHamburger?.touched" class="error">Seleziona il Tipo Hamburger</em>
                                     </mat-radio-group>
 
-                                    <label id="crea-hamburger-label">Opzioni</label> 
+                                    <label id="crea-hamburger-label">Tipo</label> 
                                     <mat-radio-group aria-labelledby="crea-hamburger-label" class="radio-group" formControlName="opzione" (ngModel)="option" name="opzione">
                                         <mat-radio-button class="radio-button" *ngFor="let opzione of opzioni" [value]="opzione">
                                             {{opzione}}
                                         </mat-radio-button>
                                     </mat-radio-group>
 
+                                    <mat-form-field >
+                                        <mat-select formControlName="opzioneCarne" id="opzione" placeholder="Opzione" >
+                                                <mat-option value="Doppio Hamburger">Doppio Hamburger</mat-option>
+                                                <mat-option value="Normale">Normale</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <br>
                                     <mat-form-field>
                                             <mat-select formControlName="bibita" id="bibita" placeholder="Bibita" required >
                                                     <mat-option value="Coca Cola 33cl">Coca Cola 33cl</mat-option>
@@ -56,8 +63,7 @@
                             <button mat-raised-button type="submit"
                                     [disabled]="creaForm.invalid || (creaForm.controls.opzione?.value == 'menu' && creaForm.controls.bibita?.value != '') ">
                                 Aggiungi </button>
-                        </div>
-                    
+                        </div>                    
                     </div>
                 </form>
                 </div>

@@ -169,8 +169,7 @@ export class OrdineService{
                 this.ordine.prodotti[indiceProdotto].prezzo -= this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].prezzo;
 
             //Eliminazione dei singoli ingredienti + aggionamento del prezzo per il HamburgerOptionsModalComponent e CreaHamburgerComponent
-            if(this.ordine.prodotti[indiceProdotto].tipo == "crea-hamburger" ||
-                this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].valueQuantita == "P")
+            if(this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].valueQuantita == "P")
                     this.ordine.prodotti[indiceProdotto].prezzo -= this.ordine.prodotti[indiceProdotto].opzioni[indiceOpzione].prezzo;
 
 

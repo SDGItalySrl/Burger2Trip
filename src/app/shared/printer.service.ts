@@ -90,11 +90,16 @@ setDataToPrint(objOrdine: any){
       data.push('Cliente: ' + objOrdine.nomeCliente + '                    CONSEGNA'); 
     else if(objOrdine.asporto == true)
       data.push(objOrdine.nomeCliente + '                    ASPORTO');
-    else if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != "")
-      data.push(objOrdine.nomeCliente + '                    EAT IN');      
+    else if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != ""){
+      data.push(objOrdine.nomeCliente + '                    EAT IN \n');
+      data.push('Orario Consegna' + objOrdine.orario.toString() + '\n');
+    }
+    (objOrdine.note != "" || objOrdine.note != undefined) ? data.push('NOTE: ' +objOrdine.note + '\n') : data.push('\n');
   }
-  else
-      data.push(objOrdine.nomeCliente + '                    EAT IN');
+  else{
+      data.push(objOrdine.nomeCliente + '                    EAT IN'); 
+      (objOrdine.note != "" || objOrdine.note != undefined) ? data.push('NOTE: ' +objOrdine.note + '\n') : data.push('\n');     
+  }
 
   data.push('\n');
   data.push('\n');
@@ -160,8 +165,10 @@ setDataToPrint(objOrdine: any){
 
       if(fritto == false && objOrdine.prodotti[c + 1].tipo == "fritto"){
         data.push('---------------------------------------------    \n');
-        if(objOrdine.nomeCliente != '')
+        if(objOrdine.nomeCliente != ''){
             data.push(objOrdine.nomeCliente + this.addBlankSpace(20, "prodotto") +'\n');
+            data.push('Orario Consegna: ' + objOrdine.orario.toString() + '\n');
+        }
         data.push('---------------------------------------------    \n');
         fritto = true;
       }
@@ -170,8 +177,11 @@ setDataToPrint(objOrdine: any){
         bibita = true;
       }
       else if(fritto == false && objOrdine.prodotti[c + 1].tipo == "OPMenu" ){
-        if(objOrdine.nomeCliente != '')
+        data.push('---------------------------------------------    \n');
+        if(objOrdine.nomeCliente != ''){
             data.push(objOrdine.nomeCliente + this.addBlankSpace(20, "prodotto") +'\n');
+            data.push('Orario Consegna: ' + objOrdine.orario.toString() + '\n');
+        }
         data.push('---------------------------------------------    \n');
         fritto = true;
       }
@@ -194,13 +204,17 @@ setDataToPrint(objOrdine: any){
     if(totaleBibite != 0){
       data.push('TOTALE BIBITE' + this.addBlankSpace(13, "prodotto") + ((totaleBibite % 1 == 0) ? (totaleBibite + ',00') : (totaleBibite + '0')) + '\n');
       let tot = objOrdine.totale - totaleBibite;
-      data.push('TOTALE EURO' + this.addBlankSpace(13, "prodotto") + ((tot % 1 == 0) ? (tot + ',00') : (tot + '0'))  + ' \n');
+      data.push('TOTALE PANINI' + this.addBlankSpace(13, "prodotto") + ((tot % 1 == 0) ? (tot + ',00') : (tot + '0'))  + ' \n');
     }
     else
       data.push('TOTALE EURO' + this.addBlankSpace(11, "prodotto") + 
       ((objOrdine.totale % 1 == 0) ? (objOrdine.totale + ',00') : (objOrdine.totale + '0')) + '\n');
       let date = new Date();
       data.push('ORA: ' + date.toString().substring(16, 24) + '\n');
+    data.push('\n');
+    data.push('\n');
+    data.push('\n');
+    data.push('\n');
     data.push('\n');
     data.push('\n');
     data.push('\n');

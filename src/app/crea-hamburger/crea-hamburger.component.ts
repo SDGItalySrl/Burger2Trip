@@ -24,6 +24,7 @@ export class CreaHamburgerComponent{
     ingredienti: Opzioni;
     tipoHamburger;
     option;
+    opzioneCarne;
     prodottoPadre: ProdottoPadre;
 
     constructor(private route: ActivatedRoute,
@@ -44,10 +45,12 @@ export class CreaHamburgerComponent{
         let tipoHamburger = new FormControl("", Validators.required);
         let opzione = new FormControl("", Validators.required);
         let bibita = new FormControl({disabled: true, value: ''}, Validators.required);
+        let opzioneCarne = new FormControl("");
         
         this.creaForm = new FormGroup({
             tipoHamburger: tipoHamburger,
-            opzione: opzione,
+            opzione: opzione,            
+            opzioneCarne: opzioneCarne,
             bibita: bibita
         })
 
@@ -199,9 +202,19 @@ export class CreaHamburgerComponent{
      * Invia l'oggetto prodotto al componente Ordine
      * @value tipoHamburger
      */
-    aggiornaOrdine(value){
-        this.prezzoTotOpzioni = this.hamburgerService.calcoloPrezzoTotale(this.prodotto);
+    aggiornaOrdine(value){        
         this.prodotto.prezzoBase = prezzoHamburger;
+        if(value.opzioneCarne != ''){
+            this.prodotto.opzioni.push({
+                id: this.prodotto.opzioni.length + 1,
+                nomeOpzione: "Opzione",
+                opzioneSelezionata: value.opzioneCarne,
+                priorita: 1,
+                prezzo: (value.opzioneCarne == "Doppio Hamburger") ? 2.50 : 0,
+            });
+        }
+
+        this.prezzoTotOpzioni = this.hamburgerService.calcoloPrezzoTotale(this.prodotto);
 
         if(value.opzione == 'Menu'){
             this.prodotto.prezzoBase += 3;
@@ -335,5 +348,71 @@ const listOpzioniPulita: Array<IOpzioni> = [
         nomeOpzione: "Pomodoro",
         quantita: 0,
         prezzo: 1
+    },
+    {
+        id: 11,
+        nomeOpzione: "Ketchup",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 12,
+        nomeOpzione: "Maionese",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 13,
+        nomeOpzione: "BBQ",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 14,
+        nomeOpzione: "Senape",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 15,
+        nomeOpzione: "Salsa Bacon",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 16,
+        nomeOpzione: "Harissa",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 17,
+        nomeOpzione: "BBQ piccante",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 18,
+        nomeOpzione: "Salsa rosa",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 19,
+        nomeOpzione: "Salsa yogurt",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 20,
+        nomeOpzione: "Salsa algerina",
+        quantita: 0,
+        prezzo: 0
+    },
+    {
+        id: 21,
+        nomeOpzione: "Guacemole",
+        quantita: 0,
+        prezzo: 0
     }
 ];
