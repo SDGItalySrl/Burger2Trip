@@ -52,9 +52,13 @@ export class OrdineService{
                     this.ordine.prodotti.push(prodotto);
                 }
             }
-            //Riordino la'oggetto prodotti in base alla priorita del prodotto come richiesto
+            //Riordino l'oggetto prodotti in base alla priorita del prodotto come richiesto
             this.ordine.prodotti.sort(function(a, b) { return a.priorita - b.priorita })
-            
+            //riordino anche le opzioni di ogni singolo prodotto in base alla priorita
+            this.ordine.prodotti.forEach(prodotto => {
+                if(prodotto.opzioni != undefined)
+                    prodotto.opzioni.sort(function(a, b){ return a.priorita - b.priorita})
+            });
             //AGGIORNO LA LISTA ORDINE UTILIZZATA DALL'ORDINE COMPONENT
             this.ordineListProdotti.next(this.ordine.prodotti);
             this.calcoloPrezzoTotale();

@@ -87,17 +87,19 @@ setDataToPrint(objOrdine: any){
   
   if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != ""){
     if(objOrdine.consegnaDomicilio == true)
-      data.push('Cliente: ' + objOrdine.nomeCliente + '                    CONSEGNA'); 
-    else if(objOrdine.asporto == true)
-      data.push(objOrdine.nomeCliente + '                    ASPORTO');
+      data.push('Cliente: ' + objOrdine.nomeCliente + '                    CONSEGNA\n'); 
+    else if(objOrdine.asporto == true){
+      data.push(objOrdine.nomeCliente + '                    ASPORTO\n');
+      data.push('Orario Consegna: ' + objOrdine.orario.toString() + '\n');
+    }
     else if(objOrdine.nomeCliente != undefined || objOrdine.nomeCliente != ""){
       data.push(objOrdine.nomeCliente + '                    EAT IN \n');
-      data.push('Orario Consegna' + objOrdine.orario.toString() + '\n');
+      data.push('Orario Consegna: ' + objOrdine.orario.toString() + '\n');
     }
     (objOrdine.note != "" || objOrdine.note != undefined) ? data.push('NOTE: ' +objOrdine.note + '\n') : data.push('\n');
   }
   else{
-      data.push(objOrdine.nomeCliente + '                    EAT IN'); 
+      data.push(objOrdine.nomeCliente + '                    EAT IN\n'); 
       (objOrdine.note != "" || objOrdine.note != undefined) ? data.push('NOTE: ' +objOrdine.note + '\n') : data.push('\n');     
   }
 
@@ -117,10 +119,18 @@ setDataToPrint(objOrdine: any){
 
   for (c; c < objOrdine.prodotti.length; c++) {
     //CONTROLLOSE I PRODOTTO HANNO QUANTITA MAGGIORE DI 1 E STAMPO IN BASE A QUELLO
-    if(objOrdine.prodotti[c].tipo == "fritto" && objOrdine.prodotti[c].quantita > 1 || objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1){
+    //controllo se è di tipo fritto o bevande e se ha la quantita > 1
+    if(objOrdine.prodotti[c].tipo == "fritto" && objOrdine.prodotti[c].quantita > 1 
+      || objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1){
       data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + 
       ((objOrdine.prodotti[c].prezzo % 1 == 0) ? (objOrdine.prodotti[c].prezzo + ',00') : (objOrdine.prodotti[c].prezzo + '0'))  + ' \n');
     }
+    //controllo se è di tipo menu 
+    else if(objOrdine.prodotti[c].isMenu){
+      data.push(objOrdine.prodotti[c].nome + ' - menu' + this.addBlankSpace((objOrdine.prodotti[c].nome.length + 6), 'prodotto') + 
+      ((objOrdine.prodotti[c].prezzo % 1 == 0) ? (objOrdine.prodotti[c].prezzo + ',00') : (objOrdine.prodotti[c].prezzo + '0'))  + ' \n');
+    }
+    //controllo se sono le opzioni menu di un prodotto
     else if(objOrdine.prodotti[c].tipo ==  "OPMenu" && objOrdine.prodotti[c].quantita > 1)
       data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + ' \n');
     else{
@@ -141,14 +151,14 @@ setDataToPrint(objOrdine: any){
             ((objOrdine.prodotti[c].opzioni[n].prezzo % 1 == 0) ? (objOrdine.prodotti[c].opzioni[n].prezzo + ',00') : (objOrdine.prodotti[c].opzioni[n].prezzo + '0'))  + ' \n');
           }
           else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "N" && objOrdine.prodotti[c].opzioni[n].quantita == 1){
-            data.push('    -' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtra') + '\n');
+            data.push('    ---' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtra') + '\n');
           }
           else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "P" && objOrdine.prodotti[c].opzioni[n].quantita > 1){
             data.push('    +' + objOrdine.prodotti[c].opzioni[n].quantita + 'x ' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtraPiuQuantita') +  
             ((objOrdine.prodotti[c].opzioni[n].prezzo % 1 == 0) ? (objOrdine.prodotti[c].opzioni[n].prezzo + ',00') : (objOrdine.prodotti[c].opzioni[n].prezzo + '0'))  + ' \n');
           }
           else if(objOrdine.prodotti[c].opzioni[n].valueQuantita == "N" && objOrdine.prodotti[c].opzioni[n].quantita > 1){
-            data.push('    -' + objOrdine.prodotti[c].opzioni[n].quantita + 'x ' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtraPiuQuantita') +'\n');
+            data.push('    ---' + objOrdine.prodotti[c].opzioni[n].quantita + 'x ' + objOrdine.prodotti[c].opzioni[n].nomeOpzione + this.addBlankSpace(objOrdine.prodotti[c].opzioni[n].nomeOpzione.length, 'ingredientiExtraPiuQuantita') +'\n');
           }
         }
         else if(objOrdine.prodotti[c].opzioni[n].nomeOpzione == "Tipo Cottura" && objOrdine.prodotti[c].opzioni[n].opzioneSelezionata != "")
@@ -164,6 +174,7 @@ setDataToPrint(objOrdine: any){
     if(objOrdine.prodotti[c + 1] != undefined){
 
       if(fritto == false && objOrdine.prodotti[c + 1].tipo == "fritto"){
+        data.push('---------------------------------------------    \n');
         data.push('---------------------------------------------    \n');
         if(objOrdine.nomeCliente != ''){
             data.push(objOrdine.nomeCliente + this.addBlankSpace(20, "prodotto") +'\n');

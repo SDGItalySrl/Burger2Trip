@@ -97,7 +97,7 @@ export class CreaHamburgerComponent{
                     id: parseFloat(objIngrediente.id),
                     nomeOpzione: objIngrediente.nomeOpzione,
                     opzioneSelezionata: objIngrediente.nomeOpzione,
-                    priorita: 1,
+                    priorita: 2,
                     prezzo: parseFloat(objIngrediente.prezzo),
                     quantita: parseFloat(objIngrediente.quantita) + 1,
                     tipo: 'ingrediente-extra',

@@ -66,15 +66,10 @@ body{background-color:#344955 !important}
         flex: 0 0 91.666667%;
         max-width: 91.666667%;
     }
-
-    
-
-    
-
 }
 
 @media(max-width: 576px){
-    .menu .card{ margin: 0 1rem 0 1rem;}
+    /*.menu .card{ margin: 0 1rem 0 1rem;}*/
 }
 
 @media(max-width: 770px){

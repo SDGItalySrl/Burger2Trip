@@ -104,7 +104,7 @@ export class HamburgerOptionsModalComponent{
                         id: 1,
                         nomeOpzione: "Tipo Cottura",
                         opzioneSelezionata : this.tipoCottura.value,
-                        priorita: 2,
+                        priorita: 3,
                         prezzo: undefined
                     },
                     {
@@ -211,7 +211,7 @@ export class HamburgerOptionsModalComponent{
                     id: parseFloat(objIngrediente.id),
                     nomeOpzione: objIngrediente.nomeOpzione,
                     opzioneSelezionata: objIngrediente.nomeOpzione,
-                    priorita: 1,
+                    priorita: 2,
                     prezzo: parseFloat(objIngrediente.prezzo),
                     quantita: parseFloat(objIngrediente.quantita) + 1,
                     tipo: 'ingrediente-extra',
@@ -257,7 +257,7 @@ export class HamburgerOptionsModalComponent{
                     id: parseFloat(objIngrediente.id),
                     nomeOpzione: objIngrediente.nomeOpzione,
                     opzioneSelezionata: objIngrediente.nomeOpzione,
-                    priorita: 1,
+                    priorita: 2,
                     prezzo: parseFloat(objIngrediente.prezzo),
                     quantita: parseFloat(objIngrediente.quantita) + 1,
                     tipo: 'ingrediente-extra',
