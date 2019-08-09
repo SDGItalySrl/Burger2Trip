@@ -62,7 +62,7 @@ export class OrdineService{
             //AGGIORNO LA LISTA ORDINE UTILIZZATA DALL'ORDINE COMPONENT
             this.ordineListProdotti.next(this.ordine.prodotti);
             this.calcoloPrezzoTotale();
-
+            
             res = true;
         } 
         catch (error) {

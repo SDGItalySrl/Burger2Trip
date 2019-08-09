@@ -124,6 +124,18 @@ setDataToPrint(objOrdine: any){
       || objOrdine.prodotti[c].tipo == "bevanda" && objOrdine.prodotti[c].quantita > 1){
       data.push(objOrdine.prodotti[c].quantita + 'x ' + objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'piuQuantita') + 
       ((objOrdine.prodotti[c].prezzo % 1 == 0) ? (objOrdine.prodotti[c].prezzo + ',00') : (objOrdine.prodotti[c].prezzo + '0'))  + ' \n');
+      
+      //setto la variabile bool fritto/bevanda a true per il divisore dei dei panini-fritti.bevande
+      (objOrdine.prodotti[c].tipo == "fritto") ? fritto = true : bibita = true;
+
+    }
+    else if(objOrdine.prodotti[c].tipo == "fritto" || objOrdine.prodotti[c].tipo == "bevanda"){
+      data.push(objOrdine.prodotti[c].nome + this.addBlankSpace(objOrdine.prodotti[c].nome.length, 'prodotto') + 
+      ((objOrdine.prodotti[c].prezzo % 1 == 0) ? (objOrdine.prodotti[c].prezzo + ',00') : (objOrdine.prodotti[c].prezzo + '0'))  + ' \n');
+
+      //setto la variabile bool fritto/bevanda a true per il divisore dei dei panini-fritti.bevande
+      (objOrdine.prodotti[c].tipo == "fritto") ? fritto = true : bibita = true;
+
     }
     //controllo se è di tipo menu 
     else if(objOrdine.prodotti[c].isMenu){
@@ -233,6 +245,7 @@ setDataToPrint(objOrdine: any){
     data.push('\n');
     data.push('\n');
     data.push('\n');
+
   return data;
 }
 

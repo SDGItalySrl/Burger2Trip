@@ -307,7 +307,7 @@ export class HamburgerOptionsModalComponent{
 
             this.listaOpzioniSelezionate.forEach(element => {
                 element.quantita = 0;
-                element.prezzo = 1;    
+                (element.tipo == "I") ? element.prezzo = 1 : element.prezzo = 0;
             });
         }
         catch (error) {
@@ -373,126 +373,147 @@ const listOpzioniPulita: Array<IOpzioni> = [
         id: 1,
         nomeOpzione: "Edamer",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 2,
         nomeOpzione: "Cheddar",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 3,
         nomeOpzione: "Bacon",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 4,
         nomeOpzione: "Cipolla",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 5,
         nomeOpzione: "Cipolla Croccante",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 6,
         nomeOpzione: "Crauti",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 7,
         nomeOpzione: "Insalata",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 8,
         nomeOpzione: "Peperoni",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 9,
         nomeOpzione: "Uovo",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 10,
         nomeOpzione: "Pomodoro",
         quantita: 0,
-        prezzo: 1
+        prezzo: 1,
+        tipo: "I"
     },
     {
         id: 11,
         nomeOpzione: "Ketchup",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 12,
         nomeOpzione: "Maionese",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 13,
         nomeOpzione: "BBQ",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 14,
         nomeOpzione: "Senape",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 15,
         nomeOpzione: "Salsa Bacon",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 16,
         nomeOpzione: "Harissa",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 17,
         nomeOpzione: "BBQ piccante",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 18,
         nomeOpzione: "Salsa rosa",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 19,
         nomeOpzione: "Salsa yogurt",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 20,
         nomeOpzione: "Salsa algerina",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     },
     {
         id: 21,
         nomeOpzione: "Guacemole",
         quantita: 0,
-        prezzo: 0
+        prezzo: 0,
+        tipo: "S"
     }
 ];
